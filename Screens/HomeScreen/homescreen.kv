@@ -5,17 +5,52 @@
     ripple_color: "#c5bdd2"
     selected_color: "#80B3FF"
 
+<CustomMDCard@MDCard>
+    size_hint: None, None
+    size: "150dp", "150dp"
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+    elevation: 1
+    md_bg_color: [142/255, 143/255, 250/255, 1]
+
+<MDCardLabel@MDLabel>
+    halign: "center"
+    theme_text_color: "Custom"
+    text_color: 1, 1, 1, 1
+
+        
 MDScreen:
     # Drawing operations performed before other widgets
     canvas.before: 
     
-        #BG Color
+        #BG Color of the Whole Screen
         Color:
-            rgba: 104/255, 126/255, 255/255, 1
+            rgba: 119/255, 82/255, 254/255, 1
         Rectangle:
             pos: self.pos
             size: self.size
+    
+    # Grid Layout for Cards
+    MDGridLayout:
+        cols: 2
+        adaptive_height: True
+        adaptive_width: True
+        spacing: "20dp"
+        pos_hint: {"center_x": 0.5, "center_y": 0.3}
 
+        # Cards which contains the functions
+        CustomMDCard:
+            MDCardLabel:
+                text: "Card Content"
+        
+        CustomMDCard:
+            MDCardLabel:
+                text: "Card Content"
+
+        CustomMDCard:
+            MDCardLabel:
+                text: "Card Content"
+
+    # Top Navigation Bar
     MDNavigationLayout:
 
         MDScreenManager:
@@ -28,17 +63,13 @@ MDScreen:
                     elevation: 0 
                     # Position hint to place the app bar at the top of its parent widget
                     pos_hint: {"top": 1} 
-                    md_bg_color: "#687EFF" 
+                    md_bg_color: "#7752FE" 
                     specific_text_color: "white" 
                     # Left action items (e.g., menu icon) and their associated actions
                     left_action_items:
                         [['menu', lambda x: nav_drawer.set_state("open")]]
                     right_action_items:
                         [['account-circle', lambda x: nav_drawer.set_state("open")]] # If click, should bring user to account screen
-
-                MDLabel: 
-                    text: "Hello!"
-                    halign: "center"
 
         MDNavigationDrawer:
             id: nav_drawer # Called in the left_action_items
@@ -70,6 +101,3 @@ MDScreen:
                 DrawerClickableItem:
                     icon: "menu-right"
                     text: "Sample 2.2"
-    
-    
-
