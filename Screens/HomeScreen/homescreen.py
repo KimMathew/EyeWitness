@@ -1,9 +1,10 @@
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.lang import Builder
 from kivymd.app import MDApp
+from kivymd.uix.card import MDCard
 from kivy.core.window import Window
 
-Window.size = (300, 500)
+Window.size = (360, 600)
 
 class HomeScreen(MDBoxLayout):
     pass
