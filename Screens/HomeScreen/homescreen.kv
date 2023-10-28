@@ -1,0 +1,40 @@
+MDScreen:
+    # Drawing operations performed before other widgets
+    canvas.before: 
+    
+        #BG Color
+        Color:
+            rgba: 104/255, 126/255, 255/255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    MDNavigationLayout:
+
+        MDScreenManager:
+
+            MDScreen: # Screen 1
+
+                MDTopAppBar:
+                    title: "Logo" 
+                    # Navigation bar shadowy effect
+                    elevation: 0 
+                    # Position hint to place the app bar at the top of its parent widget
+                    pos_hint: {"top": 1} 
+                    md_bg_color: "#687EFF" 
+                    specific_text_color: "white" 
+                    # Left action items (e.g., menu icon) and their associated actions
+                    left_action_items:
+                        [['menu', lambda x: nav_drawer.set_state("open")]]
+                    right_action_items:
+                        [['account-circle', lambda x: nav_drawer.set_state("open")]] # If click, should bring user to account screen
+
+                MDLabel: 
+                    text: "Hello!"
+                    halign: "center"
+
+        MDNavigationDrawer:
+            id: nav_drawer # Called in the left_action_items
+            radius: (0, 16, 16, 0)
+
+            
