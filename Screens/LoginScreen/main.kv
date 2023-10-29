@@ -1,0 +1,62 @@
+MDScreen: 
+    name: "main"
+
+    MDFloatLayout:
+        md_bg_color: 1, 1, 1, 1
+    
+        Image:
+            source: "Screens/Assets/samplelogo.png"
+            size_hint: 0.8, 0.8
+            pos_hint: {"center_x": 0.5, "center_y": 0.65}
+            
+        MDLabel:
+            text: "W E L C O M E !"
+            font_name: "BPoppins"
+            font_size: "23sp"
+            pos_hint: {"center_y": 0.36}
+            halign: "center"
+            color: 119/255, 82/255, 254/255, 1
+            
+
+        MDLabel:
+            text: "Sample Tagline"
+            font_name: "MPoppins"
+            font_size: "13sp"
+            pos_hint: {"center_x": 0.5, "center_y": 0.31}
+            halign: "center"
+            color: 119/255, 82/255, 254/255, 1
+
+    Button:
+        text: "LOGIN"
+        size_hint: 0.66, 0.065
+        background_color: 0, 0, 0, 0
+        pos_hint: {"center_x": 0.5, "center_y": 0.20}
+        font_name: "BPoppins"
+        on_release:
+            root.manager.transition.direction = "left"
+            root.manager.current = "login"
+        canvas.before:
+            Color:
+                rgba: 52/255, 0, 231/255, 255/255
+            RoundedRectangle:
+                size: self.size
+                pos: self.pos
+                radius: [5]
+
+    Button:
+        text: "SIGNUP"
+        size_hint: 0.66, 0.065
+        background_color: 0, 0, 0, 0
+        pos_hint: {"center_x": 0.5, "center_y": 0.11}
+        font_name: "BPoppins"
+        color: 52/255, 0, 231/255, 255/255
+
+        on_release:
+            root.manager.transition.direction = "left"
+            root.manager.current = "signup"
+        canvas.before:
+            Color:
+                rgba: 52/255, 0, 231/255, 255/255
+            Line:
+                width: 1.2
+                rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
