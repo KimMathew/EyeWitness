@@ -7,7 +7,6 @@ from kivy.core.window import Window
 
 Window.size = (360, 600)
 
-
 class MyApp(MDApp):
     def build(self):
         screen_manager = MDScreenManager()

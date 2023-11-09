@@ -9,13 +9,13 @@
     size_hint: None, None
     size: "150dp", "150dp"
     pos_hint: {"center_x": 0.5, "center_y": 0.5}
-    elevation: 1
-    md_bg_color: [142/255, 143/255, 250/255, 1]
+    elevation: 0.5
+    md_bg_color: [1, 1, 1, 1]
 
 <MDCardLabel@MDLabel>
     halign: "center"
     theme_text_color: "Custom"
-    text_color: 1, 1, 1, 1
+    text_color: "black"
 
         
 MDScreen:
@@ -25,7 +25,7 @@ MDScreen:
     
         #BG Color of the Whole Screen
         Color:
-            rgba: 119/255, 82/255, 254/255, 1
+            rgba: 255/255, 255/255, 255/255, 1
         Rectangle:
             pos: self.pos
             size: self.size
@@ -64,8 +64,8 @@ MDScreen:
                     elevation: 0 
                     # Position hint to place the app bar at the top of its parent widget
                     pos_hint: {"top": 1} 
-                    md_bg_color: "#7752FE" 
-                    specific_text_color: "white" 
+                    md_bg_color: "white" 
+                    specific_text_color: "#000000" 
                     # Left action items (e.g., menu icon) and their associated actions
                     left_action_items:
                         [['menu', lambda x: nav_drawer.set_state("open")]]
