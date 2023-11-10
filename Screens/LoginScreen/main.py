@@ -10,10 +10,10 @@ Window.size = (360, 600)
 class MyApp(MDApp):
     def build(self):
         screen_manager = MDScreenManager()
+        screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\homescreen.kv"))
         screen_manager.add_widget(Builder.load_file("main.kv"))
         screen_manager.add_widget(Builder.load_file("login.kv"))
         screen_manager.add_widget(Builder.load_file("signup.kv"))
-        screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\homescreen.kv"))
         
         return screen_manager
 

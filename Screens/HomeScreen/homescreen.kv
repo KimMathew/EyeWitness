@@ -29,6 +29,23 @@ MDScreen:
         Rectangle:
             pos: self.pos
             size: self.size
+
+    MDGridLayout:
+        cols: 1
+        adaptive_height: True
+        adaptive_width: True
+        pos_hint: {"center_x": 0.5, "center_y": 0.725}
+
+        MDCard:
+            size_hint: None, None
+            size: "320dp", "150dp"
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            elevation: 0.5
+            md_bg_color: [1, 1, 1, 1]
+
+            MDCardLabel:
+                text: "Card Content"
+
     
     # Grid Layout for Cards
     MDGridLayout:
