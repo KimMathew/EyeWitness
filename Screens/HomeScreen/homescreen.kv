@@ -11,124 +11,127 @@
     pos_hint: {"center_x": 0.5, "center_y": 0.5}
     elevation: 0.5
     md_bg_color: [1, 1, 1, 1]
+    focus_behavior: True
+    focus_color: "#E1E0E2"
 
 <MDCardLabel@MDLabel>
     halign: "center"
     theme_text_color: "Custom"
     text_color: "black"
+    font_name: "MPoppins"
+    font_size: "15sp"
+
+<CardBox@BoxLayout>
+    orientation: 'vertical'
 
 MDScreen:
     name: "homescreen"
 
-    MDBoxLayout:
-        orientation: "vertical"
+    canvas.before:
+        Color:
+            rgba: 255/255, 255/255, 255/255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
-        MDNavigationLayout:
+    MDNavigationLayout:
+        
+        ScreenManager:
+            
+            Screen:
+                
+                BoxLayout:
+                    orientation: 'vertical'
+                    
+                    MDTopAppBar:
+                        title: "[font=BPoppins][color=#3400E7][size=24]Incident Reporting[/size][/color][/font]"
+                        font_name: "BPoppins"
+                        elevation: 0
+                        pos_hint: {"top": 1}
+                        md_bg_color: "white"
+                        specific_text_color: "#000000"
+                        left_action_items:
+                            [['account-circle', lambda x: nav_drawer.set_state("open")]]
+                        center_title: True
 
-            ScreenManager:
+                    ScrollView:
+                        bar_width: 0
 
-                Screen:
+                        MDGridLayout:
+                            cols: 1
+                            adaptive_height: True
+                            adaptive_width: True
+                            pos_hint: {"center_x": 0.5, "center_y": 0.45}
+                            spacing: "20dp"
+                            padding: "20dp"
 
-                    BoxLayout:
-                        orientation: 'vertical'
+                            MDCard:
+                                size_hint: None, None
+                                size: "320dp", "150dp"
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                elevation: 0.5
+                                md_bg_color: [1, 1, 1, 1]
 
-                        MDTopAppBar:
-                            title: "[font=BPoppins][color=#3400E7][size=24]Incident Reporting[/size][/color][/font]"
-                            font_name: "BPoppins"
-                            elevation: 0
-                            pos_hint: {"top": 1}
-                            md_bg_color: "white"
-                            specific_text_color: "#000000"
-                            left_action_items:
-                                [['account-circle', lambda x: nav_drawer.set_state("open")]]
-                            center_title: True
-                        
-                        MDBoxLayout:
-                            orientation: 'vertical'
+                                MDCardLabel:
+                                    text: "Credit Score"
 
-                            MDBottomNavigation:
-                                elevation: 0
-                                panel_color: "white"
+                            MDGridLayout:
+                                cols: 2
+                                adaptive_height: True
+                                adaptive_width: True
+                                spacing: "20dp"
+                                pos_hint: {"center_x": 0.5, "center_y": 0.25}
 
-                                MDBottomNavigationItem:
-                                    name: "homescreen"
-                                    icon: "home"
-                                    text: "Home"
+                                CustomMDCard:
+                                    CardBox: 
+                                        MDIconButton:
+                                            icon: "note-edit-outline"
+                                            icon_size: "80sp"
+                                            pos_hint: {"center_x": .5, "center_y": 0.5}
 
-                                    ScrollView:
-                                        bar_width: 0
+                                        MDCardLabel:
+                                            text: "Incident Report"
 
-                                        MDGridLayout:
-                                            cols: 1
-                                            adaptive_height: True
-                                            adaptive_width: True
-                                            pos_hint: {"center_x": 0.5, "center_y": 0.45}
-                                            spacing: "20dp"
-                                            padding: "20dp"
+                                CustomMDCard:
+                                    CardBox:
+                                        MDIconButton:
+                                            icon: "alert-decagram"
+                                            icon_size: "80sp"
+                                            pos_hint: {"center_x": .5, "center_y": 0.5}
 
-                                            MDCard:
-                                                size_hint: None, None
-                                                size: "320dp", "150dp"
-                                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
-                                                elevation: 0.5
-                                                md_bg_color: [1, 1, 1, 1]
+                                        MDCardLabel:
+                                            text: "SOS"
 
-                                                MDCardLabel:
-                                                    text: "Card Content"
+                                CustomMDCard:
+                                    MDCardLabel:
+                                        text: "Card Content"
 
-                                            MDGridLayout:
-                                                cols: 2
-                                                adaptive_height: True
-                                                adaptive_width: True
-                                                spacing: "20dp"
-                                                pos_hint: {"center_x": 0.5, "center_y": 0.25}
+                MDNavigationDrawer:
+                    id: nav_drawer
+                    radius: (0, 16, 16, 0)
+                    width: "250dp"
 
-                                                CustomMDCard:
-                                                    MDCardLabel:
-                                                        text: "Card Content"
+                    MDNavigationDrawerMenu:
+                        MDNavigationDrawerLabel:
+                            text: "Sample 1"
 
-                                                CustomMDCard:
-                                                    MDCardLabel:
-                                                        text: "Card Content"
+                        DrawerClickableItem:
+                            icon: "menu-right"
+                            text: "Sample 1.1"
 
-                                                CustomMDCard:
-                                                    MDCardLabel:
-                                                        text: "Card Content"
+                        DrawerClickableItem:
+                            icon: "menu-right"
+                            text: "Sample 1.2"
 
-                                MDBottomNavigationItem:
-                                    name: "mailscreen"
-                                    icon: "mail"
+                        MDNavigationDrawerDivider:
 
-                                    MDScreen:
-                                        MDLabel:
-                                            text: "Sample"
+                        MDNavigationDrawerLabel:
+                            text: "Sample 2"
 
-            MDNavigationDrawer:
-                id: nav_drawer
-                radius: (0, 16, 16, 0)
-                width: "250dp"
+                        DrawerClickableItem:
+                            icon: "menu-right"
+                            text: "Sample 2.1"
 
-                MDNavigationDrawerMenu:
-                    MDNavigationDrawerLabel:
-                        text: "Sample 1"
-
-                    DrawerClickableItem:
-                        icon: "menu-right"
-                        text: "Sample 1.1"
-
-                    DrawerClickableItem:
-                        icon: "menu-right"
-                        text: "Sample 1.2"
-
-                    MDNavigationDrawerDivider:
-
-                    MDNavigationDrawerLabel:
-                        text: "Sample 2"
-
-                    DrawerClickableItem:
-                        icon: "menu-right"
-                        text: "Sample 2.1"
-
-                    DrawerClickableItem:
-                        icon: "menu-right"
-                        text: "Sample 2.2"
+                        DrawerClickableItem:
+                            icon: "menu-right"
+                            text: "Sample 2.2"
