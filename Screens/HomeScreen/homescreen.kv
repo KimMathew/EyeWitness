@@ -22,100 +22,92 @@ MDScreen:
     name: "homescreen"
     # Drawing operations performed before other widgets
     canvas.before: 
-    
         #BG Color of the Whole Screen
         Color:
-            rgba: 255/255, 255/255, 255/255, 1
+            rgba: 1, 1, 1, 1
         Rectangle:
             pos: self.pos
             size: self.size
 
-    MDGridLayout:
-        cols: 1
-        adaptive_height: True
-        adaptive_width: True
-        pos_hint: {"center_x": 0.5, "center_y": 0.725}
+    MDBoxLayout:
+        orientation: "vertical"
 
-        MDCard:
-            size_hint: None, None
-            size: "320dp", "150dp"
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}
-            elevation: 0.5
-            md_bg_color: [1, 1, 1, 1]
+        MDTopAppBar:
+            title: "Logo" 
+            # Navigation bar shadowy effect
+            elevation: 0 
+            # Position hint to place the app bar at the top of its parent widget
+            pos_hint: {"top": 1} 
+            md_bg_color: "white" 
+            specific_text_color: "#000000" 
+            # Left action items (e.g., menu icon) and their associated actions
+            left_action_items:
+                [['menu', lambda x: nav_drawer.set_state("open")]]
+            right_action_items:
+                [['account-circle', lambda x: nav_drawer.set_state("open")]] # If click, should bring user to account screen
 
-            MDCardLabel:
-                text: "Card Content"
+        MDBottomNavigation:
+            elevation: 0 
+            panel_color: "white"
+
+            MDBottomNavigationItem:
+                name: "homescreen"
+                icon: "home"
+                text: "Home"
+
+                MDScreen:
+                    ScrollView:
+                        bar_width: 0
+                    
+                        MDGridLayout:
+                            cols: 1
+                            adaptive_height: True
+                            adaptive_width: True
+                            pos_hint: {"center_x": 0.5, "center_y": 0.45}
+                            spacing: "20dp"
+                            padding: "20dp"
+
+                            MDCard:
+                                size_hint: None, None
+                                size: "320dp", "150dp"
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                elevation: 0.5
+                                md_bg_color: [1, 1, 1, 1]
+
+                                MDCardLabel:
+                                    text: "Card Content"
+
+                            # Grid Layout for Cards
+                            MDGridLayout:
+                                cols: 2
+                                adaptive_height: True
+                                adaptive_width: True
+                                spacing: "20dp"
+                                pos_hint: {"center_x": 0.5, "center_y": 0.25}
+
+                                # Cards which contains the functions
+                                CustomMDCard:
+                                    MDCardLabel:
+                                        text: "Card Content"
+                                
+                                CustomMDCard:
+                                    MDCardLabel:
+                                        text: "Card Content"
+
+                                CustomMDCard:
+                                    MDCardLabel:
+                                        text: "Card Content"
+            
+            MDBottomNavigationItem:
+                name: "mailscreen"
+                icon: "mail"
+                
+                MDScreen:
+
+                    MDLabel:
+                        text: "Sample"
+
+
+
 
     
-    # Grid Layout for Cards
-    MDGridLayout:
-        cols: 2
-        adaptive_height: True
-        adaptive_width: True
-        spacing: "20dp"
-        pos_hint: {"center_x": 0.5, "center_y": 0.3}
-
-        # Cards which contains the functions
-        CustomMDCard:
-            MDCardLabel:
-                text: "Card Content"
-        
-        CustomMDCard:
-            MDCardLabel:
-                text: "Card Content"
-
-        CustomMDCard:
-            MDCardLabel:
-                text: "Card Content"
-
-    # Top Navigation Bar
-    MDNavigationLayout:
-
-        MDScreenManager:
-
-            MDScreen: # Screen 1
-
-                MDTopAppBar:
-                    title: "Logo" 
-                    # Navigation bar shadowy effect
-                    elevation: 0 
-                    # Position hint to place the app bar at the top of its parent widget
-                    pos_hint: {"top": 1} 
-                    md_bg_color: "white" 
-                    specific_text_color: "#000000" 
-                    # Left action items (e.g., menu icon) and their associated actions
-                    left_action_items:
-                        [['menu', lambda x: nav_drawer.set_state("open")]]
-                    right_action_items:
-                        [['account-circle', lambda x: nav_drawer.set_state("open")]] # If click, should bring user to account screen
-
-        MDNavigationDrawer:
-            id: nav_drawer # Called in the left_action_items
-            radius: (0, 16, 16, 0)
-            width: "250dp"
-
-            MDNavigationDrawerMenu:
-
-                MDNavigationDrawerLabel:
-                    text: "Sample 1"
-
-                DrawerClickableItem:
-                    icon: "menu-right"
-                    text: "Sample 1.1"
-
-                DrawerClickableItem:
-                    icon: "menu-right"
-                    text: "Sample 1.2"
-
-                MDNavigationDrawerDivider:
-
-                MDNavigationDrawerLabel:
-                    text: "Sample 2"
-
-                DrawerClickableItem:
-                    icon: "menu-right"
-                    text: "Sample 2.1"
-
-                DrawerClickableItem:
-                    icon: "menu-right"
-                    text: "Sample 2.2"
