@@ -1,44 +1,53 @@
 from kivy.lang import Builder
 
 from kivymd.app import MDApp
-from kivymd.uix.pickers import MDDatePicker
-
-KV = '''
-MDFloatLayout:
-
-    MDRaisedButton:
-        text: "Open date picker"
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        on_release: app.show_date_picker()
-'''
 
 
 class Test(MDApp):
+
     def build(self):
+        self.theme_cls.material_style = "M3"
         self.theme_cls.theme_style = "Dark"
-        self.theme_cls.primary_palette = "Orange"
-        return Builder.load_string(KV)
+        return Builder.load_string(
+            '''
+MDScreen:
 
-    def on_save(self, instance, value, date_range):
-        '''
-        Events called when the "OK" dialog box button is clicked.
+    MDBottomNavigation:
+        #panel_color: "#eeeaea"
+        selected_color_background: "white"
+        text_color_active: "lightgrey"
+        text_color_normal: 1, 1, 1, 1
 
-        :type instance: <kivymd.uix.picker.MDDatePicker object>;
-        :param value: selected date;
-        :type value: <class 'datetime.date'>;
-        :param date_range: list of 'datetime.date' objects in the selected range;
-        :type date_range: <class 'list'>;
-        '''
+        MDBottomNavigationItem:
+            name: 'screen 1'
+            text: 'Mail'
+            icon: 'gmail'
+            badge_icon: "numeric-10"
 
-        print(instance, value, date_range)
+            MDLabel:
+                text: 'Mail'
+                halign: 'center'
 
-    def on_cancel(self, instance, value):
-        '''Events called when the "CANCEL" dialog box button is clicked.'''
+        MDBottomNavigationItem:
+            name: 'screen 2'
+            text: 'Twitter'
+            icon: 'twitter'
+            badge_icon: "numeric-5"
 
-    def show_date_picker(self):
-        date_dialog = MDDatePicker()
-        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
-        date_dialog.open()
+            MDLabel:
+                text: 'Twitter'
+                halign: 'center'
+
+        MDBottomNavigationItem:
+            name: 'screen 3'
+            text: 'LinkedIN'
+            icon: 'linkedin'
+
+            MDLabel:
+                text: 'LinkedIN'
+                halign: 'center'
+'''
+        )
 
 
 Test().run()
