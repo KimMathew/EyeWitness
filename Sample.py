@@ -1,85 +1,44 @@
 from kivy.lang import Builder
 
 from kivymd.app import MDApp
+from kivymd.uix.pickers import MDDatePicker
 
 KV = '''
-<DrawerClickableItem@MDNavigationDrawerItem>
-    focus_color: "#e7e4c0"
-    text_color: "#4a4939"
-    icon_color: "#4a4939"
-    ripple_color: "#c5bdd2"
-    selected_color: "#0c6c4d"
+MDFloatLayout:
 
-
-<DrawerLabelItem@MDNavigationDrawerItem>
-    text_color: "#4a4939"
-    icon_color: "#4a4939"
-    focus_behavior: False
-    selected_color: "#4a4939"
-    _no_ripple_effect: True
-
-
-MDScreen:
-
-    MDNavigationLayout:
-
-        MDScreenManager:
-
-            MDScreen:
-
-                MDTopAppBar:
-                    title: "Navigation Drawer"
-                    elevation: 4
-                    pos_hint: {"top": 1}
-                    md_bg_color: "#e7e4c0"
-                    specific_text_color: "#4a4939"
-                    left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
-
-        MDNavigationDrawer:
-            id: nav_drawer
-            radius: (0, 16, 16, 0)
-
-            MDNavigationDrawerMenu:
-
-                MDNavigationDrawerHeader:
-                    title: "Header title"
-                    title_color: "#4a4939"
-                    text: "Header text"
-                    spacing: "4dp"
-                    padding: "12dp", 0, 0, "56dp"
-
-                MDNavigationDrawerLabel:
-                    text: "Mail"
-
-                DrawerClickableItem:
-                    icon: "gmail"
-                    right_text: "+99"
-                    text_right_color: "#4a4939"
-                    text: "Inbox"
-
-                DrawerClickableItem:
-                    icon: "send"
-                    text: "Outbox"
-
-                MDNavigationDrawerDivider:
-
-                MDNavigationDrawerLabel:
-                    text: "Labels"
-
-                DrawerLabelItem:
-                    icon: "information-outline"
-                    text: "Label"
-
-                DrawerLabelItem:
-                    icon: "information-outline"
-                    text: "Label"
+    MDRaisedButton:
+        text: "Open date picker"
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        on_release: app.show_date_picker()
 '''
 
 
-class Example(MDApp):
+class Test(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette = "Orange"
         return Builder.load_string(KV)
 
+    def on_save(self, instance, value, date_range):
+        '''
+        Events called when the "OK" dialog box button is clicked.
 
-Example().run()
+        :type instance: <kivymd.uix.picker.MDDatePicker object>;
+        :param value: selected date;
+        :type value: <class 'datetime.date'>;
+        :param date_range: list of 'datetime.date' objects in the selected range;
+        :type date_range: <class 'list'>;
+        '''
+
+        print(instance, value, date_range)
+
+    def on_cancel(self, instance, value):
+        '''Events called when the "CANCEL" dialog box button is clicked.'''
+
+    def show_date_picker(self):
+        date_dialog = MDDatePicker()
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
+
+
+Test().run()

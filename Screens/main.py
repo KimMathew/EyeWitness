@@ -1,18 +1,24 @@
 from kivy.core.text import LabelBase
+from kivy.uix.textinput import TextInput
 from kivymd.uix.screenmanager import MDScreenManager
 from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
+from datetime import datetime
 
 Window.size = (360, 600)
+
+class SignUpScreen(Screen):
+    def on_pre_enter(self, *args):
+        pass
 
 class MyApp(MDApp):
     def build(self):
         screen_manager = MDScreenManager()
+        screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\signup.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\main.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\login.kv"))
-        screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\signup.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\homescreen.kv"))
         
         return screen_manager
