@@ -9,10 +9,6 @@ from datetime import datetime
 
 Window.size = (360, 600)
 
-class SignUpScreen(Screen):
-    def on_pre_enter(self, *args):
-        pass
-
 class MyApp(MDApp):
     def build(self):
         screen_manager = MDScreenManager()
@@ -20,7 +16,9 @@ class MyApp(MDApp):
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\main.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\login.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\signup.kv"))
-        
+        screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\screenreport.kv"))
+        screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\sosscreen.kv"))
+ 
         return screen_manager
 
 if __name__ == "__main__":

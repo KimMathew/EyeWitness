@@ -1,3 +1,5 @@
+#: import NoTransition kivy.uix.screenmanager.NoTransition
+
 <DrawerClickableItem@MDNavigationDrawerItem>
     focus_color: "#80B3FF"
     text_color: "black"
@@ -88,7 +90,10 @@ MDScreen:
                                             icon: "note-edit-outline"
                                             icon_size: "80sp"
                                             pos_hint: {"center_x": .5, "center_y": 0.5}
-
+                                            on_press:
+                                                root.manager.transition = NoTransition()
+                                                root.manager.current = "screenreport"
+                                        
                                         MDCardLabel:
                                             text: "Incident Report"
 
@@ -98,6 +103,9 @@ MDScreen:
                                             icon: "alert-decagram"
                                             icon_size: "80sp"
                                             pos_hint: {"center_x": .5, "center_y": 0.5}
+                                            on_press:
+                                                root.manager.transition = NoTransition()
+                                                root.manager.current = "sos"
 
                                         MDCardLabel:
                                             text: "SOS"
@@ -110,6 +118,7 @@ MDScreen:
                     id: nav_drawer
                     radius: (0, 16, 16, 0)
                     width: "250dp"
+                    elevation: 0.5
 
                     MDNavigationDrawerMenu:
                         MDNavigationDrawerLabel:
