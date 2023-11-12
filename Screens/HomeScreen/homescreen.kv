@@ -16,6 +16,10 @@
     focus_behavior: True
     focus_color: "#E1E0E2"
 
+<CardButton@MDIconButton>
+    icon_size: "80sp"
+    pos_hint: {"center_x": .5}
+    
 <MDCardLabel@MDLabel>
     halign: "center"
     theme_text_color: "Custom"
@@ -85,24 +89,24 @@ MDScreen:
                                 pos_hint: {"center_x": 0.5, "center_y": 0.25}
 
                                 CustomMDCard:
+                                
                                     CardBox: 
-                                        MDIconButton:
-                                            icon: "note-edit-outline"
-                                            icon_size: "80sp"
-                                            pos_hint: {"center_x": .5, "center_y": 0.5}
+                                        
+                                        CardButton:
+                                            icon: "Screens\Assets\incident.png"
                                             on_press:
                                                 root.manager.transition = NoTransition()
                                                 root.manager.current = "screenreport"
                                         
                                         MDCardLabel:
-                                            text: "Incident Report"
+                                            text: "Report Incident"
 
                                 CustomMDCard:
+                                    
                                     CardBox:
-                                        MDIconButton:
-                                            icon: "alert-decagram"
-                                            icon_size: "80sp"
-                                            pos_hint: {"center_x": .5, "center_y": 0.5}
+                                        
+                                        CardButton:
+                                            icon: "Screens\Assets\sos.png"
                                             on_press:
                                                 root.manager.transition = NoTransition()
                                                 root.manager.current = "sos"

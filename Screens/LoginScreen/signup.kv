@@ -1,19 +1,10 @@
-<CustomTextInput@TextInput>
+<TextF@MDTextField>
+    font_name_hint_text: "MPoppins"
+    font_name_helper_text: "MPoppins"
     font_name: "MPoppins"
-    size_hint_y: 0.75
-    pos_hint: {"center_x": 0.43, "center_y": 0.5}
-    background_color: 1, 1, 1, 0
-    foreground_color: 0, 0, 59/255, 255/255
-    cursor_color: 0, 0, 59/255, 255/255
-    font_size: "14sp"
-    cursor_width: "2sp"
-    multiline: False
-
-<FloatLine@MDFloatLayout>
-    pos_hint: {"center_x": 0.45, "center_y": 0}
-    size_hint_y: 0.03
-    md_bg_color: 178/255, 178/255, 178/255, 255/255
-    
+    text_color_focus: "black"
+    line_color_focus: "black"
+    hint_text_color_focus: "black"
 
 MDScreen: 
     name: "signup"
@@ -45,47 +36,37 @@ MDScreen:
             pos_hint: {"center_x": 0.6, "center_y": 0.79}
             color: 26/255, 24/255, 58/255, 1 # should be lighter color
 
-        MDFloatLayout:
-            size_hint: 0.7, 0.07
-            pos_hint: {"center_x": 0.5, "center_y": 0.71}
-            
-            CustomTextInput:
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: "20dp"
+            adaptive_height: True
+            size_hint_x: 0.7
+            pos_hint: {"center_x": 0.45, "center_y": 0.48}
+
+            TextF:
                 hint_text: "Name"
+                helper_text: "Enter your name"
 
-            FloatLine:
-
-        MDFloatLayout:
-            size_hint: 0.7, 0.07
-            pos_hint: {"center_x": 0.5, "center_y": 0.58}
-            
-            CustomTextInput:
+            TextF:
                 hint_text: "Email"
+                helper_text: "Enter your email"
 
-            FloatLine:
-
-        MDFloatLayout:
-            size_hint: 0.7, 0.07
-            pos_hint: {"center_x": 0.5, "center_y": 0.45}
-
-            CustomTextInput:
+            TextF:
                 hint_text: "Password"
+                helper_text: "Enter your password"
+                password: True
 
-            FloatLine:
-
-        MDFloatLayout:
-            size_hint: 0.7, 0.07
-            pos_hint: {"center_x": 0.5, "center_y": 0.32}
-
-            CustomTextInput:
-                hint_text: "Birthday (MM/DD/YYYY)"
-                
-            FloatLine:
+            TextF:
+                hint_text: "Birthday"
+                helper_text: "Enter your birthday (mm/dd/yyyy)"
+                validator: "date"
+                date_format: "dd/mm/yyyy"
 
         Button:
             text: "SIGNUP"
             size_hint: 0.66, 0.065
             background_color: 0, 0, 0, 0
-            pos_hint: {"center_x": 0.5, "center_y": 0.17}
+            pos_hint: {"center_x": 0.5, "center_y": 0.15}
             font_name: "BPoppins"
             # Can be link to the homescreen
             on_release:
@@ -103,7 +84,7 @@ MDScreen:
             text: "Already have an account? Sign In"
             font_name: "BPoppins"
             font_size: "11.5sp"
-            pos_hint: {"center_x": 0.5, "center_y": 0.11}
+            pos_hint: {"center_x": 0.5, "center_y": 0.09}
             color: 108/255, 117/255, 125/255, 1
             on_release:
                 root.manager.transition.direction = "left"

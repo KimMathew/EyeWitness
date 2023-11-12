@@ -2,52 +2,62 @@ from kivy.lang import Builder
 
 from kivymd.app import MDApp
 
-
-class Test(MDApp):
-
-    def build(self):
-        self.theme_cls.material_style = "M3"
-        self.theme_cls.theme_style = "Dark"
-        return Builder.load_string(
-            '''
+KV = '''
 MDScreen:
 
-    MDBottomNavigation:
-        #panel_color: "#eeeaea"
-        selected_color_background: "white"
-        text_color_active: "lightgrey"
-        text_color_normal: 1, 1, 1, 1
+    MDBoxLayout:
+        orientation: "vertical"
+        spacing: "20dp"
+        adaptive_height: True
+        size_hint_x: .8
+        pos_hint: {"center_x": .5, "center_y": .5}
 
-        MDBottomNavigationItem:
-            name: 'screen 1'
-            text: 'Mail'
-            icon: 'gmail'
-            badge_icon: "numeric-10"
+        MDTextField:
+            hint_text: "Date dd/mm/yyyy without limits"
+            helper_text: "Enter a valid dd/mm/yyyy date"
+            validator: "date"
+            date_format: "dd/mm/yyyy"
+            line_color_normal: 0.5, 0.5, 0.5, 1  # Grey color for normal line
 
-            MDLabel:
-                text: 'Mail'
-                halign: 'center'
+        MDTextField:
+            hint_text: "Date mm/dd/yyyy without limits"
+            helper_text: "Enter a valid mm/dd/yyyy date"
+            validator: "date"
+            date_format: "mm/dd/yyyy"
 
-        MDBottomNavigationItem:
-            name: 'screen 2'
-            text: 'Twitter'
-            icon: 'twitter'
-            badge_icon: "numeric-5"
+        MDTextField:
+            hint_text: "Date yyyy/mm/dd without limits"
+            helper_text: "Enter a valid yyyy/mm/dd date"
+            validator: "date"
+            date_format: "yyyy/mm/dd"
 
-            MDLabel:
-                text: 'Twitter'
-                halign: 'center'
+        MDTextField:
+            hint_text: "Date dd/mm/yyyy in [01/01/1900, 01/01/2100] interval"
+            helper_text: "Enter a valid dd/mm/yyyy date"
+            validator: "date"
+            date_format: "dd/mm/yyyy"
+            date_interval: "01/01/1900", "01/01/2100"
 
-        MDBottomNavigationItem:
-            name: 'screen 3'
-            text: 'LinkedIN'
-            icon: 'linkedin'
+        MDTextField:
+            hint_text: "Date dd/mm/yyyy in [01/01/1900, None] interval"
+            helper_text: "Enter a valid dd/mm/yyyy date"
+            validator: "date"
+            date_format: "dd/mm/yyyy"
+            date_interval: "01/01/1900", None
 
-            MDLabel:
-                text: 'LinkedIN'
-                halign: 'center'
+        MDTextField:
+            hint_text: "Date dd/mm/yyyy in [None, 01/01/2100] interval"
+            helper_text: "Enter a valid dd/mm/yyyy date"
+            validator: "date"
+            date_format: "dd/mm/yyyy"
+            date_interval: None, "01/01/2100"
 '''
-        )
+
+
+class Test(MDApp):
+    def build(self):
+        
+        return Builder.load_string(KV)
 
 
 Test().run()
