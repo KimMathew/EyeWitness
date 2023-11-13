@@ -32,21 +32,47 @@ MDScreen:
 
         MDBoxLayout:
             orientation: "vertical"
-            spacing: 0
+            spacing: "5dp"
             adaptive_height: True
             size_hint_x: 0.8
-            pos_hint: {"center_x": 0.5, "center_y": 0.78}
+            pos_hint: {"center_x": 0.5, "center_y": 0.60}
 
             TextF:
                 hint_text: "Title"
                 helper_text: "Enter the title of the report"
-                
 
-           # CustomTextInput:
-                #hint_text: "Title of the Report"
-                
+            TextF:
+                id: dropdown_text_field
+                hint_text: "Incident Type"
+                on_focus: if self.focus: app.show_incident_type_dropdown(self)  
+                readonly: True  
 
-            #FloatLine:
+            TextF:
+                id: image_path_text_field
+                hint_text: "Enter image path"
+                helper_text: "Enter or select image path"
+                helper_text: "Tap the folder icon to choose an image"
+                helper_text_mode: "on_focus"
+                # on_focus: app.filechooser_open()
 
-        MDFloatLayout:
-            
+            TextF:
+                id: dropdown_text_field
+                hint_text: "Select Urgency Level"
+                on_focus: if self.focus: app.show_urgency_dropdown(self)  
+                readonly: True  
+
+        Button:
+            text: "SUBMIT"
+            size_hint: 0.66, 0.065
+            background_color: 0, 0, 0, 0
+            pos_hint: {"center_x": 0.5, "center_y": 0.30}
+            font_name: "BPoppins"
+            on_release:
+                app.show_success_dialog()
+            canvas.before:
+                Color:
+                    rgba: 52/255, 0, 231/255, 255/255
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]  
