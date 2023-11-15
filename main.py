@@ -2,9 +2,6 @@ from kivy.core.text import LabelBase
 from kivymd.uix.menu import MDDropdownMenu 
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.dialog import MDDialog
-from kivymd.icon_definitions import md_icons
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.label import MDLabel
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.core.window import Window
