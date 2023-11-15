@@ -36,12 +36,11 @@ class MyApp(MDApp):
 
     def build(self):
         screen_manager = MDScreenManager()
+        screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\homescreen.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\screenreport.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\main.kv"))
-        screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\homescreen.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\login.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\signup.kv"))
-        screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\sosscreen.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\homescreen_admin.kv"))
         
         return screen_manager
@@ -62,10 +61,10 @@ class MyApp(MDApp):
         urgency_items = ["Low", "Medium", "High"]
         self.dropdown_handler.show_custom_dropdown(caller, urgency_items)
 
-    # Submitting Delay
+    # Dialog for Submitting
     def show_success_dialog(self):
         self.dialog = MDDialog(
-            text="Submitted Successfully",
+            text="Submitted Successfully!",
             radius=[20, 20, 20, 20],
             size_hint=(0.8, None),
             height=dp(200)
