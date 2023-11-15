@@ -64,13 +64,14 @@ class MyApp(MDApp):
     # Dialog for Submitting
     def show_success_dialog(self):
         self.dialog = MDDialog(
-            text="Submitted Successfully!",
+            text="Successfully Submitted!",
             radius=[20, 20, 20, 20],
-            size_hint=(0.8, None),
+            size_hint=(0.7, None),
             height=dp(200)
         )
         self.dialog.ids.text.text_color = (0, 0, 0, 1)  # Set text color to black
-        self.dialog.ids.text.font_name = "MPoppins"
+        self.dialog.ids.text.font_name = "BPoppins"
+        self.dialog.ids.text.font_size = "20sp"
         self.dialog.ids.text.halign = "center"
         self.dialog.ids.text.valign = "center"
         self.dialog.open()
