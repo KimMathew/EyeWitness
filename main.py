@@ -2,6 +2,9 @@ from kivy.core.text import LabelBase
 from kivymd.uix.menu import MDDropdownMenu 
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.dialog import MDDialog
+from kivymd.icon_definitions import md_icons
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.label import MDLabel
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.core.window import Window
@@ -69,7 +72,7 @@ class MyApp(MDApp):
             size_hint=(0.7, None),
             height=dp(200)
         )
-        self.dialog.ids.text.text_color = (0, 0, 0, 1)  # Set text color to black
+        self.dialog.ids.text.text_color = (0, 0, 0, 1)  
         self.dialog.ids.text.font_name = "BPoppins"
         self.dialog.ids.text.font_size = "20sp"
         self.dialog.ids.text.halign = "center"
