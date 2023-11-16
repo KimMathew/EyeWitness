@@ -15,6 +15,7 @@ from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.uix.label import Label
 from kivy.properties import ObjectProperty
+from kivymd.uix.button import MDIconButton
 
 # Kivy Builder String for the custom content layout
 KV = '''
@@ -169,20 +170,39 @@ cursor = db.cursor()
 
 Window.size = (360, 600)
 
-class ListApp(MDApp):
+class StatusScreen(Screen):
     
     dropdown = ObjectProperty()
     
-    def build(self):
-        Builder.load_string(KV)  # Load the Kivy Builder string
-        self.screen = Screen()
-        # self.theme_cls.primary_palette = "Green"
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Builder.load_string(KV)
+
+        # Layout for Back Button and ScrollView
+        layout = BoxLayout(orientation='vertical')
+
+        # Back Button
+        back_button = MDIconButton(
+            icon="arrow-left",
+            pos_hint={'center_x': 0.1},
+            on_release=self.go_back
+        )
+        
+        # Add Back Button to Layout
+        layout.add_widget(back_button)
+
+        # ScrollView and List View for Reports
         scroll = ScrollView()
         self.list_view = MDList()
         scroll.add_widget(self.list_view)
+        layout.add_widget(scroll)
+
         self.populate_list()
-        self.screen.add_widget(scroll)
-        return self.screen
+        self.add_widget(layout)  # Add the layout to the screen
+
+    def go_back(self, instance):
+        # Switch to home screen
+        self.manager.current = 'home_screen'
 
     def populate_list(self):
         cursor.execute("SELECT ReportId, Title FROM report")
@@ -286,8 +306,3 @@ class ListApp(MDApp):
     def dismiss_dialog(self, *args):
         self.dialog.dismiss()
 
-if __name__ == "__main__":
-    LabelBase.register(name="MPoppins", fn_regular="Screens\\Assets\\Poppins\\Poppins-Medium.ttf")
-    LabelBase.register(name="BPoppins", fn_regular="Screens\\Assets\\Poppins\\Poppins-SemiBold.ttf")
-
-    ListApp().run()
