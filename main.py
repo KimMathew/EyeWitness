@@ -1,3 +1,5 @@
+import mysql.connector
+import random
 from kivy.core.text import LabelBase
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screenmanager import MDScreenManager
@@ -13,6 +15,19 @@ import string
 import mysql.connector
 from datetime import datetime
 
+host = "sql12.freesqldatabase.com"
+user = "sql12662532"
+password = "viDRIhzYSq"
+database = "sql12662532"
+
+db = mysql.connector.connect(
+    host = "sql12.freesqldatabase.com",
+    user = "sql12662532",
+    password = "viDRIhzYSq",
+    database = "sql12662532",
+    )
+
+cursor = db.cursor()
 Window.size = (360, 600)
 
 class DropDownHandler:
@@ -119,6 +134,43 @@ class MyApp(MDApp):
         finally:
             cursor.close()
             conn.close()
+    
+    # Reporting functions
+    def show_incident_type_dropdown(self, caller):
+        incident_types = ["Medical Emergency", "Natural Disaster", "Security Threat", "Others"]
+        self.dropdown_handler.show_custom_dropdown(caller, incident_types)
+
+    def show_urgency_dropdown(self, caller):
+        urgency_levels = ["Low", "Medium", "High"]
+        self.dropdown_handler.show_custom_dropdown(caller, urgency_levels)
+
+    def submit_data(self):
+        # Assuming 'screenreport' is the name of the screen where your 'title' widget resides
+        screen_report = self.root.get_screen('screenreport')
+
+       
+        reportInitial = random.randint(10, 999)
+        reportID = str(reportInitial)
+        title = screen_report.ids.title.text
+        incident_type = screen_report.ids.choice1.text
+        image_path = screen_report.ids.imagepath.text
+        details = screen_report.ids.details.text
+        urgency = screen_report.ids.urgency.text
+        status = "pending"
+        date_created = datetime.now().strftime("%Y-%m-%d")
+
+        cursor.execute(
+            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+            (reportID, title, incident_type, image_path, details, urgency, status, date_created)
+        )
+        db.commit()
+
+        # Clear the text fields
+        screen_report.ids.title.text = ""
+        screen_report.ids.choice1.text = ""
+        screen_report.ids.imagepath.text = ""
+        screen_report.ids.details.text = ""
+        screen_report.ids.urgency.text = ""
 
 
     def show_success_dialog(self):
