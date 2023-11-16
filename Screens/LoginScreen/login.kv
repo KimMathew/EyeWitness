@@ -44,11 +44,12 @@ MDScreen:
             pos_hint: {"center_x": 0.45, "center_y": 0.60}
             
             TextF:
+                id: email_input
                 hint_text: "Email"
                 helper_text: "Enter your email"
-
     
             TextF:
+                id: password_input
                 hint_text: "Password"
                 helper_text: "Enter your password"
                 password: True
@@ -59,10 +60,9 @@ MDScreen:
             background_color: 0, 0, 0, 0
             pos_hint: {"center_x": 0.5, "center_y": 0.38}
             font_name: "BPoppins"
-            # Can be link to the homescreen
             on_release:
-                root.manager.transition.direction = "left"
-                root.manager.current = "homescreen"
+                # This will call the on_login method in your main.py
+                app.on_login(email_input.text, password_input.text)
             canvas.before:
                 Color:
                     rgba: 52/255, 0, 231/255, 255/255
@@ -77,5 +77,3 @@ MDScreen:
             color: 108/255, 117/255, 125/255, 1
             font_size: "12sp"
             font_name: "BPoppins"
-
-    

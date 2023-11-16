@@ -44,19 +44,23 @@ MDScreen:
             pos_hint: {"center_x": 0.45, "center_y": 0.48}
 
             TextF:
+                id: name_input
                 hint_text: "Name"
                 helper_text: "Enter your name"
 
             TextF:
+                id: email_input
                 hint_text: "Email"
                 helper_text: "Enter your email"
 
             TextF:
+                id: password_input
                 hint_text: "Password"
                 helper_text: "Enter your password"
                 password: True
 
             TextF:
+                id: birthday_input
                 hint_text: "Birthday"
                 helper_text: "Enter your birthday (mm/dd/yyyy)"
                 validator: "date"
@@ -68,10 +72,8 @@ MDScreen:
             background_color: 0, 0, 0, 0
             pos_hint: {"center_x": 0.5, "center_y": 0.15}
             font_name: "BPoppins"
-            # Can be link to the homescreen
             on_release:
-                root.manager.transition.direction = "left"
-                root.manager.current = "homescreen"
+                app.on_signup(name_input.text, email_input.text, password_input.text, birthday_input.text)
             canvas.before:
                 Color:
                     rgba: 52/255, 0, 231/255, 255/255
