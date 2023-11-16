@@ -29,6 +29,13 @@ KV = '''
             pos: self.pos
             radius: [5] 
 
+<StatusLabel@MDLabel>:
+    font_name: "MPoppins"
+    text: "label text"
+    halign: "center"  
+    size_hint_y: None
+    height: self.texture_size[1]
+
 <DialogContent>:
     orientation: "vertical"
     size_hint_y: None
@@ -54,57 +61,33 @@ KV = '''
             size_hint_y: None
             size_hint_x: 1  # Take full width of the ScrollView
             height: self.minimum_height
-            spacing: "30dp"
-            padding: [30, 50, 30, 0]  # Padding: [left, top, right, bottom]
+            spacing: "20dp"
+            padding: [30, 20, 30, 30]  # Padding: [left, top, right, bottom]
             pos_hint: {'center_x': 0.5, 'top': 1}  # Adjust pos_hint as needed
 
-            MDLabel:
+            StatusLabel:
                 id: title
-                font_name: "MPoppins"
-                text: "label text"
-                halign: "center"  # Align text within the label
-                size_hint_y: (1)
-                height: self.texture_size[1]
                 
-            MDLabel:
+            StatusLabel:
                 id: checklist
-                text: "label text"
-                halign: "center"  # Align text within the label
-                size_hint_y: None
-                height: self.texture_size[1]
             
-            MDLabel:
+            StatusLabel:
                 id: image_path
-                text: "label text"
-                halign: "center"  # Align text within the label
-                size_hint_y: None
-                height: self.texture_size[1]
                 
-            MDLabel:
+            StatusLabel:
                 id: details
-                text: "label text"
-                halign: "center"  # Align text within the label
-                size_hint_y: None
-                height: self.texture_size[1]
                 
-            MDLabel:
+            StatusLabel:
                 id: urgency
-                text: "label text"
-                halign: "center"  # Align text within the label
-                size_hint_y: None
-                height: self.texture_size[1]
             
-            MDLabel:
+            StatusLabel:
                 id: status
-                text: "label text"
-                halign: "center"  # Align text within the label
-                size_hint_y: None
-                height: self.texture_size[1]
 
     # Added        
     GridLayout:
         cols: 2
         spacing: "15sp"
+        padding: "5sp"
         size_hint_y: None
         height: "48dp"  # Fixed height for the button area
 
