@@ -196,7 +196,6 @@ class MyApp(MDApp):
         screen_report.ids.details.text = ""
         screen_report.ids.urgency.text = ""
 
-
     def show_success_dialog(self):
         self.dialog = MDDialog(
             text="Successfully Submitted!",
@@ -214,6 +213,11 @@ class MyApp(MDApp):
 
     def dismiss_dialog(self, dt):
         self.dialog.dismiss()
+        # Schedule the transition to the home screen to happen after a short delay
+        Clock.schedule_once(self.transition_to_home, 0.5)
+
+    def transition_to_home(self, dt):
+        self.root.current = 'homescreen'
 
 if __name__ == "__main__":
     LabelBase.register(name="MPoppins", fn_regular="Screens\\Assets\\Poppins\\Poppins-Medium.ttf")
