@@ -7,6 +7,7 @@ from kivymd.uix.screen import Screen
 from kivymd.uix.list import MDList, TwoLineListItem
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
+from kivymd.uix.button import MDRectangleFlatButton
 from kivymd.uix.button import MDFlatButton
 from kivy.uix.scrollview import ScrollView
 from kivy.core.window import Window
@@ -61,27 +62,45 @@ KV = '''
             size_hint_y: None
             size_hint_x: 1  # Take full width of the ScrollView
             height: self.minimum_height
-            spacing: "20dp"
+            spacing: "12dp"
             padding: [30, 20, 30, 30]  # Padding: [left, top, right, bottom]
             pos_hint: {'center_x': 0.5, 'top': 1}  # Adjust pos_hint as needed
 
             StatusLabel:
                 id: title
+
+            MDSeparator:
+                height: "1dp"
                 
             StatusLabel:
                 id: checklist
+
+            MDSeparator:
+                height: "1dp"
             
             StatusLabel:
                 id: image_path
+            
+            MDSeparator:
+                height: "1dp"
                 
             StatusLabel:
                 id: details
+
+            MDSeparator:
+                height: "1dp"
                 
             StatusLabel:
                 id: urgency
+
+            MDSeparator:
+                height: "1dp"
             
             StatusLabel:
                 id: status
+
+            MDSeparator:
+                height: "1dp"
 
     # Added        
     GridLayout:
@@ -172,7 +191,7 @@ class ListApp(MDApp):
 
         if data:
             # Update label texts
-            self.dialog_content.ids.title.text = "Title: " + str(data[0])
+            self.dialog_content.ids.title.text = "[b]Title: [/b]" + str(data[0])
             self.dialog_content.ids.checklist.text = "Checklist: " + str(data[1])
             self.dialog_content.ids.image_path.text = "Image Path: " + str(data[2])
             self.dialog_content.ids.details.text = "Details: " + str(data[3])
@@ -184,11 +203,22 @@ class ListApp(MDApp):
                                size_hint=(0.8, None),
                                buttons=[
                                    MDFlatButton(
-                                       text="Submit",
+                                       text="Cancel",
+                                       font_name="BPoppins",
+                                       font_size="14sp",
                                        theme_text_color="Custom",
-                                       text_color=self.theme_cls.primary_color,
-                                       on_release=self.submit_data
+                                       text_color=(0, 0, 0, 1),
+                                       on_release=self.dismiss_dialog
                                    ),
+                                   MDRectangleFlatButton(
+                                       text="Submit",
+                                       font_name="BPoppins",
+                                       font_size="14sp",
+                                       theme_text_color="Custom",
+                                       text_color=(0, 0, 0, 1),
+                                       line_color=(52/255, 0, 231/255, 255/255),
+                                       on_release=self.submit_data
+                                   )
                                ])
         self.dialog.open()
         self.create_dropdown_menu()
@@ -220,6 +250,10 @@ class ListApp(MDApp):
     def submit_data(self, instance):
         cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
         db.commit()
+        self.dialog.dismiss()
+
+    # For Cancel Button
+    def dismiss_dialog(self, *args):
         self.dialog.dismiss()
 
 if __name__ == "__main__":
