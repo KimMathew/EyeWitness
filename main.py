@@ -71,25 +71,49 @@ class MyApp(MDApp):
             return None
 
     def on_signup(self, name, email, password, birthdate):
-        user_id = self.generate_user_id()
-        formatted_birthdate = self.convert_date_format(birthdate)
-        if formatted_birthdate is None:
-            toast("Invalid date format provided. Please use MM/DD/YYYY.")
+        # Check if any of the fields are empty
+        if not name.strip():
+            toast("Please enter your name.")
+            return
+        if not email.strip():
+            toast("Please enter your email.")
+            return
+        if not password:
+            toast("Please enter your password.")
+            return
+        if not birthdate.strip():
+            toast("Please enter your birthday.")
             return
 
+        # Validate the birthday format
+        try:
+            # Using strptime to check if the birthday is in the correct format
+            datetime.strptime(birthdate, '%m/%d/%Y')
+        except ValueError:
+            # If strptime raises a ValueError, it means the format is incorrect
+            toast("Invalid birthday format. Please use MM/DD/YYYY.")
+            return
+
+        # If all validations pass, proceed with creating a user ID and formatting the birthdate
+        user_id = self.generate_user_id()
+        formatted_birthdate = datetime.strptime(birthdate, '%m/%d/%Y').date()
+
+        # Database connection and cursor setup
         conn = self.get_db_connection()
         cursor = conn.cursor()
         try:
+            # Insert the new user's data into the database
             cursor.execute(
                 "INSERT INTO UserProfiles (ProfileID, UserName, Email, Birthdate, UserPassword, CreditScore) "
-                "VALUES (%s, %s, %s, %s, %s, %s)",
-                (user_id, name, email, formatted_birthdate, password, 100)
+                "VALUES (%s, %s, %s, %s, %s, 100)",
+                (user_id, name, email, formatted_birthdate, password)
             )
             conn.commit()
+            # Inform the user of successful signup and navigate to the login screen
             toast("Signup successful! Please log in.")
             self.screen_manager.current = 'login'
         except mysql.connector.Error as err:
-            print("Error: ", err)
+            print("Database error: ", err)
             toast("An error occurred during signup.")
         finally:
             cursor.close()
