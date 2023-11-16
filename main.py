@@ -46,7 +46,7 @@ class MyApp(MDApp):
         
         return screen_manager
     
-    # For DropDown
+    # For DropDownn
     def show_incident_type_dropdown(self, caller):
         incident_type = ["Medical Emergency", "Natural Disaster", "Security Threat", "Others"]
         self.dropdown_handler.show_custom_dropdown(caller, incident_type)
