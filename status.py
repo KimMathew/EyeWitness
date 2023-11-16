@@ -282,18 +282,6 @@ class ListApp(MDApp):
         db.commit()
         self.dialog.dismiss()
 
-    def falseReport(self):
-        new_status = "False Report"
-        cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (new_status, self.selected_report_id))
-        db.commit()
-        self.dialog.dismiss()
-
-    def falseReport(self):
-        new_status = "False Report"
-        cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (new_status, self.selected_report_id))
-        db.commit()
-        self.dialog.dismiss()
-
     # For Cancel Button
     def dismiss_dialog(self, *args):
         self.dialog.dismiss()
