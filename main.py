@@ -184,8 +184,8 @@ class MyApp(MDApp):
         date_created = datetime.now().strftime("%Y-%m-%d")
 
         cursor.execute(
-            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-            (reportID, title, incident_type, image_path, details, urgency, status, date_created)
+            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.current_user['user_id'])
         )
         db.commit()
 
