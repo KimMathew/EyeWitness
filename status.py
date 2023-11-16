@@ -113,7 +113,7 @@ KV = '''
         Button:
             id: button
             text: "False Report"
-            # on_release: app.menu_callback()
+            on_release: app.falseReport()
             
         Button:
             id: button
@@ -249,6 +249,12 @@ class ListApp(MDApp):
 
     def submit_data(self, instance):
         cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
+        db.commit()
+        self.dialog.dismiss()
+    
+    def falseReport(self):
+        new_status = "False Report"
+        cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (new_status, self.selected_report_id))
         db.commit()
         self.dialog.dismiss()
 
