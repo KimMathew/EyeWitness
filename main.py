@@ -36,12 +36,13 @@ class MyApp(MDApp):
 
     def build(self):
         screen_manager = MDScreenManager()
+        screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\homescreen_admin.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\homescreen.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\screenreport.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\main.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\login.kv"))
         screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\signup.kv"))
-        screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\homescreen_admin.kv"))
+        
         
         return screen_manager
     
