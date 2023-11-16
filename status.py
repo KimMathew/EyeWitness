@@ -7,7 +7,7 @@ from kivymd.uix.screen import Screen
 from kivymd.uix.list import MDList, TwoLineListItem
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
-from kivymd.uix.button import MDRectangleFlatButton
+from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.button import MDFlatButton
 from kivy.uix.scrollview import ScrollView
 from kivy.core.window import Window
@@ -18,6 +18,30 @@ from kivy.properties import ObjectProperty
 
 # Kivy Builder String for the custom content layout
 KV = '''
+
+<TwoPartLabel@BoxLayout>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    padding: 0
+
+    MDLabel:
+        id: label_prefix
+        font_name: "BPoppins"
+        halign: "left"  
+        size_hint_y: None
+        text: ""
+
+    MDLabel:
+        id: label_dynamic
+        font_name: "MPoppins"
+        halign: "left"  
+        size_hint_y: None
+        text: ""
+        
+
+<Separator@MDSeparator>:
+    height: "1dp"
+
 <Button@MDRaisedButton>:
     size_hint: 0.66, 0.065
     background_color: 0, 0, 0, 0
@@ -29,13 +53,6 @@ KV = '''
             size: self.size
             pos: self.pos
             radius: [5] 
-
-<StatusLabel@MDLabel>:
-    font_name: "MPoppins"
-    text: "label text"
-    halign: "left"  
-    size_hint_y: None
-    height: self.texture_size[1]
 
 <DialogContent>:
     orientation: "vertical"
@@ -55,70 +72,71 @@ KV = '''
 
     ScrollView:
         size_hint_y: None
-        height: 440  # Adjust based on your dialog box size
+        height: 500  # Adjust based on your dialog box size
 
         GridLayout:
             cols: 1
             size_hint_y: None
             size_hint_x: 1  # Take full width of the ScrollView
             height: self.minimum_height
-            spacing: "12dp"
+            spacing: "5dp"
             padding: [0, 20, 30, 30]  # Padding: [left, top, right, bottom]
             pos_hint: {'center_x': 0.5, 'top': 1}  # Adjust pos_hint as needed
 
-            StatusLabel:
+            Separator:
+
+            TwoPartLabel:
                 id: title
 
-            MDSeparator:
-                height: "1dp"
+            Separator:
                 
-            StatusLabel:
+            TwoPartLabel:
                 id: checklist
 
-            MDSeparator:
-                height: "1dp"
+            Separator:
             
-            StatusLabel:
+            TwoPartLabel:
                 id: image_path
             
-            MDSeparator:
-                height: "1dp"
+            Separator:
                 
-            StatusLabel:
+            TwoPartLabel:
                 id: details
 
-            MDSeparator:
-                height: "1dp"
+            Separator:
                 
-            StatusLabel:
+            TwoPartLabel:
                 id: urgency
 
-            MDSeparator:
-                height: "1dp"
+            Separator:
             
-            StatusLabel:
+            TwoPartLabel:
                 id: status
 
-            MDSeparator:
-                height: "1dp"
+            GridLayout:
+                cols: 2
+                spacing: "10sp"
+                padding: [0, 10, 0, 0]
+                size_hint_y: None
+                height: "48dp"  # Fixed height for the button area
 
-    # Added        
-    GridLayout:
-        cols: 2
-        spacing: "15sp"
-        padding: "5sp"
-        size_hint_y: None
-        height: "48dp"  # Fixed height for the button area
-
-        Button:
-            id: button
-            text: "False Report"
-            # on_release: app.menu_callback()
-            
-        Button:
-            id: button
-            text: "Select Status"
-            on_release: app.menu_callback()
+                Button:
+                    id: button
+                    text: "False Report"
+                    canvas.before:
+                        Color:
+                            rgba: 250/255, 8/255, 9/255, 1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [5] 
+                    on_release: app.falseReport()
+                    
+                Button:
+                    id: button
+                    text: "Select Status"
+                    on_release: app.menu_callback()
+    
 '''
 
 class CustomTwoLineListItem(TwoLineListItem): # Added
@@ -178,6 +196,12 @@ class ListApp(MDApp):
             )
             self.list_view.add_widget(item)
 
+    # Method to update the text for TwoPartLabel
+    def set_two_part_label_text(self, label_id, prefix, data_text):
+        setattr(self.dialog_content.ids[label_id].ids.label_prefix, 'text', prefix)
+        setattr(self.dialog_content.ids[label_id].ids.label_dynamic, 'text', str(data_text))
+
+
     # displaying the reports
     def open_dialog(self, row):
         self.selected_report_id = row[0]  # Store the selected ReportId
@@ -191,12 +215,12 @@ class ListApp(MDApp):
 
         if data:
             # Update label texts
-            self.dialog_content.ids.title.text = "Title: " + str(data[0])
-            self.dialog_content.ids.checklist.text = "Checklist: " + str(data[1])
-            self.dialog_content.ids.image_path.text = "Image Path: " + str(data[2])
-            self.dialog_content.ids.details.text = "Details: " + str(data[3])
-            self.dialog_content.ids.urgency.text = "Urgency: " + str(data[4])
-            self.dialog_content.ids.status.text = "Status: " + str(data[5])
+            self.set_two_part_label_text('title', "Title:", data[0])
+            self.set_two_part_label_text('checklist', "Checklist:", data[1])
+            self.set_two_part_label_text('image_path', "Image Path:", data[2])
+            self.set_two_part_label_text('details', "Details:", data[3])
+            self.set_two_part_label_text('urgency', "Urgency:", data[4])
+            self.set_two_part_label_text('status', "Status:", data[5])
 
         self.dialog = MDDialog(type="custom",
                                content_cls=self.dialog_content,  # Use custom content class
@@ -210,13 +234,13 @@ class ListApp(MDApp):
                                        text_color=(0, 0, 0, 1),
                                        on_release=self.dismiss_dialog
                                    ),
-                                   MDRectangleFlatButton(
+                                   MDRaisedButton(
                                        text="Submit",
                                        font_name="BPoppins",
                                        font_size="14sp",
                                        theme_text_color="Custom",
-                                       text_color=(0, 0, 0, 1),
-                                       line_color=(52/255, 0, 231/255, 255/255),
+                                       text_color=(1, 1, 1, 1),
+                                       md_bg_color=(76/255, 175/255, 80/255, 1),
                                        on_release=self.submit_data
                                    )
                                ])
@@ -249,6 +273,12 @@ class ListApp(MDApp):
 
     def submit_data(self, instance):
         cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
+        db.commit()
+        self.dialog.dismiss()
+
+    def falseReport(self):
+        new_status = "False Report"
+        cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (new_status, self.selected_report_id))
         db.commit()
         self.dialog.dismiss()
 
