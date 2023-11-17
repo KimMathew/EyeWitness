@@ -58,12 +58,13 @@ class MyApp(MDApp):
     def build(self):
         self.screen_manager = MDScreenManager()
         status_screen = StatusScreen(name='status')  #Create an instance of StatusScreen
+        self.status_screen = status_screen
         self.screen_manager.add_widget(status_screen)
         # Load the screen from KV file and assign a name
-        home_screen = Builder.load_file("Screens\HomeScreen\homescreen.kv")
-        self.screen_manager.add_widget(home_screen)
+        homescreen = Builder.load_file("Screens\HomeScreen\homescreen.kv")
+        self.screen_manager.add_widget(homescreen)
         # Assign a name to the screen
-        home_screen.name = 'home_screen'
+        homescreen.name = 'homescreen'
         self.screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\signup.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\login.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\screenreport.kv"))
@@ -225,6 +226,16 @@ class MyApp(MDApp):
 
     def transition_to_home(self, dt):
         self.root.current = 'homescreen'
+        
+    
+    # Status update extended function
+    def falseReport(self):
+        if self.status_screen:
+            self.status_screen.falseReport()
+
+    def menu_callback(self):
+        if self.status_screen:
+            self.status_screen.menu_callback()
 
 if __name__ == "__main__":
     LabelBase.register(name="MPoppins", fn_regular="Screens\\Assets\\Poppins\\Poppins-Medium.ttf")
