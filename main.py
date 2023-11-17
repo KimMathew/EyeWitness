@@ -52,10 +52,42 @@ class DropDownHandler:
         self.dropdown_menu.dismiss()
         caller.focus = False
 
+class SuccessDialog:
+    def __init__(self, app, transition_function):
+        self.app = app
+        self.transition_function = transition_function
+
+    def show_success_dialog(self, transition_screen):
+        self.transition_screen = transition_screen
+        self.dialog = MDDialog(
+            text="Successfully Submitted!",
+            radius=[20, 20, 20, 20],
+            size_hint=(0.7, None),
+            height=dp(200)
+        )
+        self.dialog.ids.text.text_color = (0, 0, 0, 1)
+        self.dialog.ids.text.font_name = "BPoppins"
+        self.dialog.ids.text.font_size = "20sp"
+        self.dialog.ids.text.halign = "center"
+        self.dialog.ids.text.valign = "center"
+        self.dialog.open()
+        Clock.schedule_once(self.dismiss_dialog, 2)
+
+    def dismiss_dialog(self, dt):
+        self.dialog.dismiss()
+        # Schedule the transition to the home screen to happen after a short delay
+        Clock.schedule_once(self.transition_function, 0.5)
+
+    # def transition_to_home(self, dt):
+        # self.root.current = self.transition_screen
+
 class MyApp(MDApp):
     dropdown_handler = DropDownHandler()
 
     def build(self):
+        self.success_dialog_user = SuccessDialog(self, self.transition_to_user_home)
+        self.success_dialog_enforcer = SuccessDialog(self, self.transition_to_enforcer_home)
+
         self.screen_manager = MDScreenManager()
         
         homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
@@ -75,9 +107,9 @@ class MyApp(MDApp):
         self.screen_manager.add_widget(Builder.load_file("Screens\\Enforcer_Screens\\enforcer_report_history.kv"))
 
         # Login Screens
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
 
         # For Admins
         self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
@@ -215,30 +247,22 @@ class MyApp(MDApp):
         screen_report.ids.details.text = ""
         screen_report.ids.urgency.text = ""
 
-    def show_success_dialog(self):
-        self.dialog = MDDialog(
-            text="Successfully Submitted!",
-            radius=[20, 20, 20, 20],
-            size_hint=(0.7, None),
-            height=dp(200)
-        )
-        self.dialog.ids.text.text_color = (0, 0, 0, 1)
-        self.dialog.ids.text.font_name = "BPoppins"
-        self.dialog.ids.text.font_size = "20sp"
-        self.dialog.ids.text.halign = "center"
-        self.dialog.ids.text.valign = "center"
-        self.dialog.open()
-        Clock.schedule_once(self.dismiss_dialog, 2)
+    def show_user_success_dialog(self, transition_screen):
+        # Method to trigger the success dialog for user
+        self.success_dialog_user.show_success_dialog(transition_screen)
 
-    def dismiss_dialog(self, dt):
-        self.dialog.dismiss()
-        # Schedule the transition to the home screen to happen after a short delay
-        Clock.schedule_once(self.transition_to_home, 0.5)
+    def show_enforcer_success_dialog(self, transition_screen):
+        # Method to trigger the success dialog for enforcer
+        self.success_dialog_enforcer.show_success_dialog(transition_screen)
 
-    def transition_to_home(self, dt):
+    # For User
+    def transition_to_user_home(self, dt):
         self.root.current = 'homescreen'
+
+    # For Enforcer
+    def transition_to_enforcer_home(self, dt):
+        self.root.current = 'homescreen_enforcer'
         
-    
     # Status update extended function
     def falseReport(self):
         if self.status_screen:
