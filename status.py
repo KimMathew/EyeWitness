@@ -23,7 +23,7 @@ KV = '''
 <TwoPartLabel@BoxLayout>:
     orientation: 'horizontal'
     size_hint_y: None
-    padding: 0
+    padding: 1
 
     MDLabel:
         id: label_prefix
@@ -84,6 +84,11 @@ KV = '''
             padding: [0, 20, 30, 30]  # Padding: [left, top, right, bottom]
             pos_hint: {'center_x': 0.5, 'top': 1}  # Adjust pos_hint as needed
 
+            Separator:
+
+            TwoPartLabel:
+                id: username
+                
             Separator:
 
             TwoPartLabel:
@@ -232,12 +237,11 @@ class StatusScreen(Screen):
         setattr(self.dialog_content.ids[label_id].ids.label_dynamic, 'text', str(data_text))
 
 
-    # displaying the reports
     def open_dialog(self, row):
         self.selected_report_id = row[0]  # Store the selected ReportId
 
         # Fetch data for the selected report
-        cursor.execute("SELECT Title, Checklist, image_Path, Details, Urgency, Status FROM report WHERE ReportId = %s", (self.selected_report_id,))
+        cursor.execute("SELECT Title, Checklist, image_Path, Details, Urgency, Status, ProfileID FROM report WHERE ReportId = %s", (self.selected_report_id,))
         data = cursor.fetchone()
 
         # Create dialog content
@@ -252,31 +256,41 @@ class StatusScreen(Screen):
             self.set_two_part_label_text('urgency', "Urgency:", data[4])
             self.set_two_part_label_text('status', "Status:", data[5])
 
+            # Fetch username for the selected report
+            self.selected_profile_id = data[6]
+            cursor.execute("SELECT Username FROM UserProfiles WHERE ProfileID = %s", (self.selected_profile_id,))
+            data2 = cursor.fetchone()
+
+            if data2:
+                self.set_two_part_label_text('username', "Reported by:", str(data2[0]))
+            else:
+                self.set_two_part_label_text('username', "Reported by:", "Unkown")
+
         self.dialog = MDDialog(type="custom",
-                               content_cls=self.dialog_content,  # Use custom content class
-                               size_hint=(0.8, None),
-                               buttons=[
-                                   MDFlatButton(
-                                       text="Cancel",
-                                       font_name="BPoppins",
-                                       font_size="14sp",
-                                       theme_text_color="Custom",
-                                       text_color=(0, 0, 0, 1),
-                                       on_release=self.dismiss_dialog
-                                   ),
-                                   MDRaisedButton(
-                                       text="Submit",
-                                       font_name="BPoppins",
-                                       font_size="14sp",
-                                       theme_text_color="Custom",
-                                       text_color=(1, 1, 1, 1),
-                                       md_bg_color=(76/255, 175/255, 80/255, 1),
-                                       on_release=self.submit_data
-                                   )
-                               ])
+                            content_cls=self.dialog_content,
+                            size_hint=(0.8, None),
+                            buttons=[
+                                MDFlatButton(
+                                    text="Cancel",
+                                    font_name="BPoppins",
+                                    font_size="14sp",
+                                    theme_text_color="Custom",
+                                    text_color=(0, 0, 0, 1),
+                                    on_release=self.dismiss_dialog
+                                ),
+                                MDRaisedButton(
+                                    text="Submit",
+                                    font_name="BPoppins",
+                                    font_size="14sp",
+                                    theme_text_color="Custom",
+                                    text_color=(1, 1, 1, 1),
+                                    md_bg_color=(76/255, 175/255, 80/255, 1),
+                                    on_release=self.submit_data
+                                )
+                            ])
         self.dialog.open()
         self.create_dropdown_menu()
-
+        
     def create_dropdown_menu(self):
         menu_items = [
             {"viewclass": "OneLineListItem", "text": "Preparing to deploy"},
