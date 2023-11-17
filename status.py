@@ -80,7 +80,7 @@ KV = '''
             size_hint_y: None
             size_hint_x: 1  # Take full width of the ScrollView
             height: self.minimum_height
-            spacing: "5dp"
+            spacing: "15dp"
             padding: [0, 20, 30, 30]  # Padding: [left, top, right, bottom]
             pos_hint: {'center_x': 0.5, 'top': 1}  # Adjust pos_hint as needed
 
@@ -113,6 +113,8 @@ KV = '''
             
             TwoPartLabel:
                 id: status
+
+            Separator:
 
             GridLayout:
                 cols: 2
@@ -184,8 +186,10 @@ class StatusScreen(Screen):
         # Back Button
         back_button = MDIconButton(
             icon="arrow-left",
-            pos_hint={'center_x': 0.1},
-            on_release=self.go_back
+            font_size="30sp",
+            theme_text_color="Custom",
+            text_color=(26/255, 24/255, 58/255, 255/255),
+            on_release=self.go_back,
         )
         
         # Add Back Button to Layout
@@ -202,7 +206,7 @@ class StatusScreen(Screen):
 
     def go_back(self, instance):
         # Switch to home screen
-        self.manager.current = 'home_screen'
+        self.manager.current = 'homescreen'
 
     def populate_list(self):
         cursor.execute("SELECT ReportId, Title FROM report")
@@ -215,6 +219,8 @@ class StatusScreen(Screen):
                 on_release=lambda x, row=row: self.open_dialog(row)
             )
             self.list_view.add_widget(item)
+
+        self.list_view.padding = [0, 0, 0, 0]
 
     # Method to update the text for TwoPartLabel
     def set_two_part_label_text(self, label_id, prefix, data_text):
