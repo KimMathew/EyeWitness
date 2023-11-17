@@ -1,0 +1,171 @@
+#: import NoTransition kivy.uix.screenmanager.NoTransition
+
+<DrawerClickableItem@MDNavigationDrawerItem>
+    focus_color: "#80B3FF"
+    text_color: "black"
+    icon_color: "black"
+    ripple_color: "#c5bdd2"
+    selected_color: "#80B3FF"
+
+<CustomMDCard@MDCard>
+    size_hint: None, None
+    size: "150dp", "150dp"
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+    elevation: 0.5
+    md_bg_color: [1, 1, 1, 1]
+    focus_behavior: True
+    focus_color: "#E1E0E2"
+
+<CardButton@MDIconButton>
+    icon_size: "80sp"
+    pos_hint: {"center_x": .5}
+    
+<MDCardLabel@MDLabel>
+    halign: "center"
+    theme_text_color: "Custom"
+    text_color: "black"
+    font_name: "MPoppins"
+    font_size: "15sp"
+
+<CardBox@BoxLayout>
+    orientation: 'vertical'
+
+MDScreen:
+    name: "homescreen_enforcer"
+
+    canvas.before:
+        Color:
+            rgba: 255/255, 255/255, 255/255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    MDNavigationLayout:
+        
+        ScreenManager:
+            
+            Screen:
+                
+                BoxLayout:
+                    orientation: 'vertical'
+                    
+                    MDTopAppBar:
+                        title: "[font=BPoppins][color=#3400E7][size=24]Incident Reporting[/size][/color][/font]"
+                        font_name: "BPoppins"
+                        elevation: 0
+                        pos_hint: {"top": 1}
+                        md_bg_color: "white"
+                        specific_text_color: "#000000"
+                        left_action_items:
+                            [['account-circle', lambda x: nav_drawer.set_state("open")]]
+                        center_title: True
+
+                    ScrollView:
+                        bar_width: 0
+
+                        MDGridLayout:
+                            cols: 1
+                            adaptive_height: True
+                            adaptive_width: True
+                            pos_hint: {"center_x": 0.5, "center_y": 0.45}
+                            spacing: "20dp"
+                            padding: "20dp"
+
+                            MDCard:
+                                size_hint: None, None
+                                size: "320dp", "150dp"
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                elevation: 0.5
+                                md_bg_color: [1, 1, 1, 1]
+
+                                MDCardLabel:
+                                    text: "Credit Score"
+
+                            MDGridLayout:
+                                cols: 2
+                                adaptive_height: True
+                                adaptive_width: True
+                                spacing: "20dp"
+                                pos_hint: {"center_x": 0.5, "center_y": 0.25}
+
+                                CustomMDCard:
+                                
+                                    CardBox: 
+                                        
+                                        CardButton:
+                                            icon: "Screens\Assets\incident.png"
+                                            on_press:
+                                                root.manager.transition = NoTransition()
+                                                root.manager.current = "enforcer_screen_report"
+                                        
+                                        MDCardLabel:
+                                            text: "Report Incident"
+
+                                CustomMDCard:
+                                    
+                                    CardBox:
+                                        
+                                        CardButton:
+                                            icon: "Screens\Assets\sos.png"
+                                            on_press:
+                                                app.show_success_dialog()
+
+                                        MDCardLabel:
+                                            text: "SOS"
+
+                                CustomMDCard:
+                                    
+                                    CardBox:
+
+                                        CardButton:
+                                            icon: "Screens\Assets\history.png"
+                                            on_press: 
+                                                root.manager.transition = NoTransition()
+                                                root.manager.current = "enforcer_report_history"
+
+                                        MDCardLabel:
+                                            text: "Report History"
+
+                                CustomMDCard:
+                                    
+                                    CardBox:
+
+                                        CardButton:
+                                            icon: "Screens\Assets\history.png"
+                                            on_press: 
+                                                root.manager.transition = NoTransition()
+                                                root.manager.current = "status_screen"
+
+                                        MDCardLabel:
+                                            text: "Report Status"
+
+                MDNavigationDrawer:
+                    id: nav_drawer
+                    radius: (0, 16, 16, 0)
+                    width: "250dp"
+                    elevation: 0.5
+
+                    MDNavigationDrawerMenu:
+                        MDNavigationDrawerLabel:
+                            text: "User Name"
+
+                        DrawerClickableItem:
+                            icon: "menu-right"
+                            text: "Sample 1.1"
+
+                        DrawerClickableItem:
+                            icon: "menu-right"
+                            text: "Sample 1.2"
+
+                        MDNavigationDrawerDivider:
+
+                        MDNavigationDrawerLabel:
+                            text: "Sample 2"
+
+                        DrawerClickableItem:
+                            icon: "menu-right"
+                            text: "Sample 2.1"
+
+                        DrawerClickableItem:
+                            icon: "menu-right"
+                            text: "Sample 2.2"

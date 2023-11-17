@@ -206,7 +206,7 @@ class StatusScreen(Screen):
 
     def go_back(self, instance):
         # Switch to home screen
-        self.manager.current = 'homescreen'
+        self.manager.current = 'homescreen_enforcer'
 
     def populate_list(self):
         cursor.execute("SELECT ReportId, Title FROM report")

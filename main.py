@@ -57,19 +57,30 @@ class MyApp(MDApp):
 
     def build(self):
         self.screen_manager = MDScreenManager()
+        
+        homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
+        self.screen_manager.add_widget(homescreen_enforcer)
         status_screen = StatusScreen(name='status')  #Create an instance of StatusScreen
         self.status_screen = status_screen
         self.screen_manager.add_widget(status_screen)
-        # Load the screen from KV file and assign a name
-        homescreen = Builder.load_file("Screens\HomeScreen\homescreen.kv") 
-        self.screen_manager.add_widget(homescreen)
-        # Assign a name to the screen
-        homescreen.name = 'homescreen'
-        self.screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\signup.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\login.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\screenreport.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\LoginScreen\main.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\HomeScreen\homescreen_admin.kv"))
+        homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
+
+        # For Users
+        self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\homescreen.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\screenreport.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\report_history.kv"))
+        
+        # For Enforcers
+        self.screen_manager.add_widget(Builder.load_file("Screens\\Enforcer_Screens\\enforcer_screen_report.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\Enforcer_Screens\\enforcer_report_history.kv"))
+
+        # Login Screens
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
+
+        # For Admins
+        self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
 
         return self.screen_manager
 

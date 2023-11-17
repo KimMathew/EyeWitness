@@ -114,8 +114,17 @@ MDScreen:
                                             text: "SOS"
 
                                 CustomMDCard:
-                                    MDCardLabel:
-                                        text: "Card Content"
+                                    
+                                    CardBox:
+
+                                        CardButton:
+                                            icon: "Screens\Assets\history.png"
+                                            on_press: 
+                                                root.manager.transition = NoTransition()
+                                                root.manager.current = "report_history"
+
+                                        MDCardLabel:
+                                            text: "Report History"
 
                 MDNavigationDrawer:
                     id: nav_drawer
@@ -125,7 +134,7 @@ MDScreen:
 
                     MDNavigationDrawerMenu:
                         MDNavigationDrawerLabel:
-                            text: "Sample 1"
+                            text: "User Name"
 
                         DrawerClickableItem:
                             icon: "menu-right"
