@@ -209,11 +209,15 @@ class StatusScreen(Screen):
         self.manager.current = 'homescreen_enforcer'
 
     def populate_list(self):
-        cursor.execute("SELECT ReportId, Title FROM report")
+        # Clear the existing list items before repopulating
+        self.list_view.clear_widgets()
+
+        # SQL query to select only reports with status not equal to 'resolved' or 'False Report'
+        cursor.execute("SELECT ReportId, Title FROM report WHERE status != 'resolved' AND status != 'False Report'")
         rows = cursor.fetchall()
 
         for row in rows:
-            item = CustomTwoLineListItem( # Added
+            item = CustomTwoLineListItem(
                 text='Report ID: ' + str(row[0]),
                 secondary_text='Title: ' + row[1],
                 on_release=lambda x, row=row: self.open_dialog(row)
@@ -296,17 +300,24 @@ class StatusScreen(Screen):
         self.new_status = option_text
         print(option_text)
         self.dropdown.dismiss()
+    
 
     def submit_data(self, instance):
         cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
         db.commit()
         self.dialog.dismiss()
+        self.refresh_list()
     
     def falseReport(self):
         new_status = "False Report"
         cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (new_status, self.selected_report_id))
         db.commit()
         self.dialog.dismiss()
+        self.refresh_list()
+        
+    def refresh_list(self):
+        self.list_view.clear_widgets()  # Clear the current list
+        self.populate_list()  # Repopulate the list
 
     # For Cancel Button
     def dismiss_dialog(self, *args):
