@@ -121,11 +121,11 @@ class MyApp(MDApp):
 
         self.screen_manager = MDScreenManager()
         # Login Screens
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(homescreen_enforcer)
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
         
 
@@ -203,12 +203,14 @@ class MyApp(MDApp):
         # Database connection and cursor setup
         conn = self.get_db_connection()
         cursor = conn.cursor()
+        
+        accountType = "Pending"
         try:
             # Insert the new user's data into the database
             cursor.execute(
-                "INSERT INTO UserProfiles (ProfileID, UserName, Email, Birthdate, UserPassword, CreditScore) "
-                "VALUES (%s, %s, %s, %s, %s, 100)",
-                (user_id, name, email, formatted_birthdate, password)
+                "INSERT INTO UserProfiles (ProfileID, UserName, Email, Birthdate, UserPassword, CreditScore, AccountType) "
+                "VALUES (%s, %s, %s, %s, %s, 100, %s)",
+                (user_id, name, email, formatted_birthdate, password, accountType)
             )
             conn.commit()
             # Inform the user of successful signup and navigate to the login screen
