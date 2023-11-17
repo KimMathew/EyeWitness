@@ -61,7 +61,7 @@ class MyApp(MDApp):
         self.status_screen = status_screen
         self.screen_manager.add_widget(status_screen)
         # Load the screen from KV file and assign a name
-        homescreen = Builder.load_file("Screens\HomeScreen\homescreen.kv")
+        homescreen = Builder.load_file("Screens\HomeScreen\homescreen.kv") 
         self.screen_manager.add_widget(homescreen)
         # Assign a name to the screen
         homescreen.name = 'homescreen'
