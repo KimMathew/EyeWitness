@@ -93,7 +93,7 @@ MDScreen:
                                     CardBox: 
                                         
                                         CardButton:
-                                            icon: "Screens\Assets\incident.png"
+                                            icon: "Screens\\Assets\\report.png"
                                             on_press:
                                                 root.manager.transition = NoTransition()
                                                 root.manager.current = "enforcer_screen_report"
@@ -106,7 +106,7 @@ MDScreen:
                                     CardBox:
                                         
                                         CardButton:
-                                            icon: "Screens\Assets\sos.png"
+                                            icon: "Screens\\Assets\\sos.png"
                                             on_press:
                                                 app.show_enforcer_success_dialog('homescreen_enforcer')
 
@@ -118,7 +118,7 @@ MDScreen:
                                     CardBox:
 
                                         CardButton:
-                                            icon: "Screens\Assets\history.png"
+                                            icon: "Screens\\Assets\\history.png"
                                             on_press: 
                                                 root.manager.transition = NoTransition()
                                                 root.manager.current = "enforcer_report_history"
@@ -131,7 +131,7 @@ MDScreen:
                                     CardBox:
 
                                         CardButton:
-                                            icon: "Screens\Assets\history.png"
+                                            icon: "Screens\\Assets\\status.png"
                                             on_press: 
                                                 root.manager.transition = NoTransition()
                                                 root.manager.current = "status_screen"
