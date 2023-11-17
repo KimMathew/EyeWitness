@@ -134,7 +134,7 @@ MDScreen:
                                             icon: "Screens\\Assets\\status.png"
                                             on_press: 
                                                 root.manager.transition = NoTransition()
-                                                root.manager.current = "status_screen"
+                                                app.add_enforcer_status_screen()
 
                                         MDCardLabel:
                                             text: "Report Status"

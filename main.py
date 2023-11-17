@@ -52,6 +52,36 @@ class DropDownHandler:
         self.dropdown_menu.dismiss()
         caller.focus = False
 
+# Submitting the report data
+class DataHandler:
+    def __init__(self, app):
+        self.app = app
+
+    def submit_data(self, screen_name):
+        screen_report = self.app.root.get_screen(screen_name)
+
+        reportInitial = random.randint(10, 999)
+        reportID = str(reportInitial)
+        title = screen_report.ids.title.text
+        incident_type = screen_report.ids.choice1.text
+        image_path = screen_report.ids.imagepath.text
+        details = screen_report.ids.details.text
+        urgency = screen_report.ids.urgency.text
+        status = "pending"
+        date_created = datetime.now().strftime("%Y-%m-%d")
+
+        cursor.execute(
+            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.app.current_user['user_id'])
+        )
+        db.commit()
+
+        # Clear the text fields
+        screen_report.ids.title.text = ""
+        screen_report.ids.choice1.text = ""
+        screen_report.ids.imagepath.text = ""
+        screen_report.ids.details.text = ""
+        screen_report.ids.urgency.text = ""
 class SuccessDialog:
     def __init__(self, app, transition_function):
         self.app = app
@@ -87,15 +117,17 @@ class MyApp(MDApp):
     def build(self):
         self.success_dialog_user = SuccessDialog(self, self.transition_to_user_home)
         self.success_dialog_enforcer = SuccessDialog(self, self.transition_to_enforcer_home)
+        self.data_handler = DataHandler(self)
 
         self.screen_manager = MDScreenManager()
-        
+        # Login Screens
         homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(homescreen_enforcer)
-        status_screen = StatusScreen(name='status')  #Create an instance of StatusScreen
-        self.status_screen = status_screen
-        self.screen_manager.add_widget(status_screen)
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
+        
 
         # For Users
         self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\homescreen.kv"))
@@ -106,15 +138,19 @@ class MyApp(MDApp):
         self.screen_manager.add_widget(Builder.load_file("Screens\\Enforcer_Screens\\enforcer_screen_report.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\Enforcer_Screens\\enforcer_report_history.kv"))
 
-        # Login Screens
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
 
         # For Admins
         self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
 
         return self.screen_manager
+    
+    
+    # Used to transition screen coming from other py file
+    def add_enforcer_status_screen(self):
+        if not hasattr(self, 'status_screen'):
+            self.status_screen = StatusScreen(name='status_screen')
+            self.screen_manager.add_widget(self.status_screen)
+        self.screen_manager.current = 'status_screen'
 
     def generate_user_id(self):
         characters = string.ascii_letters + string.digits
@@ -219,34 +255,14 @@ class MyApp(MDApp):
         urgency_levels = ["Low", "Medium", "High"]
         self.dropdown_handler.show_custom_dropdown(caller, urgency_levels)
 
-    def submit_data(self):
-        # Assuming 'screenreport' is the name of the screen where your 'title' widget resides
-        screen_report = self.root.get_screen('screenreport')
+    # submit function 
+    def change_screen_and_submit(self, new_screen_name):
+        # Call the submit_data method before changing the screen
+        self.data_handler.submit_data('screenreport')  # Pass the screen name from which data will be submitted
 
-       
-        reportInitial = random.randint(10, 999)
-        reportID = str(reportInitial)
-        title = screen_report.ids.title.text
-        incident_type = screen_report.ids.choice1.text
-        image_path = screen_report.ids.imagepath.text
-        details = screen_report.ids.details.text
-        urgency = screen_report.ids.urgency.text
-        status = "pending"
-        date_created = datetime.now().strftime("%Y-%m-%d")
-
-        cursor.execute(
-            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.current_user['user_id'])
-        )
-        db.commit()
-
-        # Clear the text fields
-        screen_report.ids.title.text = ""
-        screen_report.ids.choice1.text = ""
-        screen_report.ids.imagepath.text = ""
-        screen_report.ids.details.text = ""
-        screen_report.ids.urgency.text = ""
-
+        # Change the screen after submitting the data
+        self.screen_manager.current = new_screen_name
+        
     def show_user_success_dialog(self, transition_screen):
         # Method to trigger the success dialog for user
         self.success_dialog_user.show_success_dialog(transition_screen)
