@@ -130,22 +130,6 @@ KV = '''
                 size_hint_y: None
                 height: "48dp"  # Fixed height for the button area
 
-                Button:
-                    id: button
-                    text: "False Report"
-                    canvas.before:
-                        Color:
-                            rgba: 250/255, 8/255, 9/255, 1
-                        RoundedRectangle:
-                            size: self.size
-                            pos: self.pos
-                            radius: [5] 
-                    on_release: app.falseReport()
-                    
-                Button:
-                    id: button
-                    text: "Select Status"
-                    on_release: app.menu_callback()
     
 '''
 
@@ -180,6 +164,7 @@ cursor = db.cursor()
 Window.size = (360, 600)
 
 class ReportHistory(Screen):
+    user_id = None  # Add a user_id attribute
     
     dropdown = ObjectProperty()
     
@@ -201,26 +186,35 @@ class ReportHistory(Screen):
         
         # Add Back Button to Layout
         layout.add_widget(back_button)
-
         # ScrollView and List View for Reports
         scroll = ScrollView()
         self.list_view = MDList()
+        self.list_view.clear_widgets()
         scroll.add_widget(self.list_view)
         layout.add_widget(scroll)
-
-        self.populate_list()
+        
         self.add_widget(layout)  # Add the layout to the screen
 
     def go_back(self, instance):
         # Switch to home screen
         self.manager.current = 'homescreen'
+    
+    def on_enter(self, *args):
+        super(ReportHistory, self).on_enter(*args)
+        self.refresh_list()
+
+
+    def refresh_list(self):
+        self.list_view.clear_widgets()  # Clear the current list
+        self.populate_list()  # Repopulate the list with fresh data
 
     def populate_list(self):
         # Clear the existing list items before repopulating
         self.list_view.clear_widgets()
 
-        # SQL query to select only reports with status not equal to 'resolved' or 'False Report'
-        cursor.execute("SELECT ReportId, Title FROM report WHERE status != 'resolved' AND status != 'False Report'")
+        # Fetch fresh data from the database and repopulate the list
+        query = "SELECT ReportId, Title FROM report WHERE ProfileID = %s"
+        cursor.execute(query, (self.user_id,))
         rows = cursor.fetchall()
 
         for row in rows:
@@ -230,8 +224,6 @@ class ReportHistory(Screen):
                 on_release=lambda x, row=row: self.open_dialog(row)
             )
             self.list_view.add_widget(item)
-
-        self.list_view.padding = [0, 0, 0, 0]
 
     # Method to update the text for TwoPartLabel
     def set_two_part_label_text(self, label_id, prefix, data_text):
@@ -272,64 +264,22 @@ class ReportHistory(Screen):
                             content_cls=self.dialog_content,
                             size_hint=(0.8, None),
                             buttons=[
-                                MDFlatButton(
-                                    text="Cancel",
-                                    font_name="BPoppins",
-                                    font_size="14sp",
-                                    theme_text_color="Custom",
-                                    text_color=(0, 0, 0, 1),
-                                    on_release=self.dismiss_dialog
-                                ),
                                 MDRaisedButton(
-                                    text="Submit",
+                                    text="Close",
                                     font_name="BPoppins",
                                     font_size="14sp",
                                     theme_text_color="Custom",
                                     text_color=(1, 1, 1, 1),
                                     md_bg_color=(76/255, 175/255, 80/255, 1),
-                                    on_release=self.submit_data
+                                    on_release=self.dismiss_dialog
                                 )
                             ])
         self.dialog.open()
-        self.create_dropdown_menu()
         
-    def create_dropdown_menu(self):
-        menu_items = [
-            {"viewclass": "OneLineListItem", "text": "Preparing to deploy"},
-            {"viewclass": "OneLineListItem", "text": "On the Process"},
-            {"viewclass": "OneLineListItem", "text": "Resolved"}
-        ]
-
-        self.dropdown = MDDropdownMenu(
-            caller=self.dialog_content.ids.button,
-            items=menu_items,
-            width_mult=4
-        )
-
-        for item in menu_items:
-            item['on_release'] = lambda x=item['text']: self.option_callback(x)
 
     def menu_callback(self):
         self.dropdown.open()
-
-    def option_callback(self, option_text):
-        self.new_status = option_text
-        print(option_text)
-        self.dropdown.dismiss()
     
-
-    def submit_data(self, instance):
-        cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
-        db.commit()
-        self.dialog.dismiss()
-        self.refresh_list()
-    
-    def falseReport(self):
-        new_status = "False Report"
-        cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (new_status, self.selected_report_id))
-        db.commit()
-        self.dialog.dismiss()
-        self.refresh_list()
         
     def refresh_list(self):
         self.list_view.clear_widgets()  # Clear the current list

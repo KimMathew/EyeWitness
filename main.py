@@ -157,8 +157,10 @@ class MyApp(MDApp):
         if not hasattr(self, 'report_history'):
             self.report_history = ReportHistory(name='report_history')
             self.screen_manager.add_widget(self.report_history)
+        # Pass the user_id to the ReportHistory instance
+        self.report_history.user_id = self.current_user['user_id']
         self.screen_manager.current = 'report_history'
-
+    
     def generate_user_id(self):
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for i in range(10))
@@ -268,7 +270,6 @@ class MyApp(MDApp):
     def change_screen_and_submit(self, new_screen_name):
         # Call the submit_data method before changing the screen
         self.data_handler.submit_data('screenreport')  # Pass the screen name from which data will be submitted
-
         # Change the screen after submitting the data
         self.screen_manager.current = new_screen_name
         
