@@ -67,7 +67,7 @@ class DataHandler:
         image_path = screen_report.ids.imagepath.text
         details = screen_report.ids.details.text
         urgency = screen_report.ids.urgency.text
-        status = "pending"
+        status = "Pending"
         date_created = datetime.now().strftime("%Y-%m-%d")
 
         cursor.execute(
