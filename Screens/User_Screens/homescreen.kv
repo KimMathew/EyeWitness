@@ -121,7 +121,7 @@ MDScreen:
                                             icon: "Screens\\Assets\\history.png"
                                             on_press: 
                                                 root.manager.transition = NoTransition()
-                                                root.manager.current = "report_history"
+                                                app.add_user_report_history_screen()
 
                                         MDCardLabel:
                                             text: "Report History"

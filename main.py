@@ -15,6 +15,7 @@ import string
 import mysql.connector
 from datetime import datetime
 from status import StatusScreen  # Import the StatusScreen
+from reportHistory import ReportHistory
 
 host = "sql12.freesqldatabase.com"
 user = "sql12662532"
@@ -121,18 +122,17 @@ class MyApp(MDApp):
 
         self.screen_manager = MDScreenManager()
         # Login Screens
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(homescreen_enforcer)
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
         
 
         # For Users
         self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\homescreen.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\screenreport.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\report_history.kv"))
         
         # For Enforcers
         self.screen_manager.add_widget(Builder.load_file("Screens\\Enforcer_Screens\\enforcer_screen_report.kv"))
@@ -145,12 +145,19 @@ class MyApp(MDApp):
         return self.screen_manager
     
     
-    # Used to transition screen coming from other py file
+    # Used to transition screen coming from other py file(status update of enforcer)
     def add_enforcer_status_screen(self):
         if not hasattr(self, 'status_screen'):
             self.status_screen = StatusScreen(name='status_screen')
             self.screen_manager.add_widget(self.status_screen)
         self.screen_manager.current = 'status_screen'
+    
+    # Used to transition screen coming from other py file(view past reports of logged in users)
+    def add_user_report_history_screen(self):
+        if not hasattr(self, 'report_history'):
+            self.report_history = ReportHistory(name='report_history')
+            self.screen_manager.add_widget(self.report_history)
+        self.screen_manager.current = 'report_history'
 
     def generate_user_id(self):
         characters = string.ascii_letters + string.digits
