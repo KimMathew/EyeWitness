@@ -31,13 +31,15 @@ KV = '''
         halign: "left"  
         size_hint_y: None
         text: ""
+        font_size: "15sp"
 
     MDLabel:
         id: label_dynamic
         font_name: "MPoppins"
-        halign: "left"  
+        halign: "center"  
         size_hint_y: None
         text: ""
+        font_size: "14sp"
         
 
 <Separator@MDSeparator>:
@@ -264,7 +266,7 @@ class StatusScreen(Screen):
             if data2:
                 self.set_two_part_label_text('username', "Reported by:", str(data2[0]))
             else:
-                self.set_two_part_label_text('username', "Reported by:", "Unkown")
+                self.set_two_part_label_text('username', "Reported by:", "Unknown")
 
         self.dialog = MDDialog(type="custom",
                             content_cls=self.dialog_content,
