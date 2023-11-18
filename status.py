@@ -122,6 +122,11 @@ KV = '''
                 id: status
 
             Separator:
+            
+            TwoPartLabel:
+                id: dateCreated
+
+            Separator:
 
             GridLayout:
                 cols: 2
@@ -243,7 +248,7 @@ class StatusScreen(Screen):
         self.selected_report_id = row[0]  # Store the selected ReportId
 
         # Fetch data for the selected report
-        cursor.execute("SELECT Title, Checklist, image_Path, Details, Urgency, Status, ProfileID FROM report WHERE ReportId = %s", (self.selected_report_id,))
+        cursor.execute("SELECT Title, Checklist, image_Path, Details, Urgency, Status, ProfileID, dateCreated FROM report WHERE ReportId = %s", (self.selected_report_id,))
         data = cursor.fetchone()
 
         # Create dialog content
@@ -257,6 +262,7 @@ class StatusScreen(Screen):
             self.set_two_part_label_text('details', "Details:", data[3])
             self.set_two_part_label_text('urgency', "Urgency:", data[4])
             self.set_two_part_label_text('status', "Status:", data[5])
+            self.set_two_part_label_text('dateCreated', "Report Date :", data[7])
 
             # Fetch username for the selected report
             self.selected_profile_id = data[6]
