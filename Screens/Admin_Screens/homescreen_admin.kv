@@ -80,27 +80,38 @@ MDScreen:
                 radius: (0, 16, 16, 0)
                 width: "250dp"
 
-                MDNavigationDrawerMenu:
-                    MDNavigationDrawerLabel:
-                        text: "Sample 1"
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: "12dp"
 
-                    DrawerClickableItem:
-                        icon: "menu-right"
-                        text: "Sample 1.1"
+                    MDLabel:
+                        text: "Username" # Change it to the name of the current user
+                        font_size: "19sp"
+                        font_name: "BPoppins"
+                        padding: "12dp", 0, 0, 0
+                        size_hint_y: None
+                        height: self.texture_size[1]
 
-                    DrawerClickableItem:
-                        icon: "menu-right"
-                        text: "Sample 1.2"
+                    MDSeparator:
+                        height: "1dp"
+                        size_hint_y: None
 
-                    MDNavigationDrawerDivider:
+                    MDRoundFlatIconButton:
+                        text: "Log Out"
+                        icon: "logout"
+                        line_color: 1, 1, 1, 1
+                        font_name: "MPoppins"
+                        font_size: "16sp"
+                        text_color: 0, 0, 0, 1
+                        icon_color: 0, 0, 0, 1
+                        padding: "12dp", 0, 0, 0
+                        size_hint_y: None
+                        focus_color: "#80B3FF"
+                        
+                        # Create a logout function
+                        on_release: 
+                            root.manager.transition = NoTransition()
+                            root.manager.current = "main"
 
-                    MDNavigationDrawerLabel:
-                        text: "Sample 2"
-
-                    DrawerClickableItem:
-                        icon: "menu-right"
-                        text: "Sample 2.1"
-
-                    DrawerClickableItem:
-                        icon: "menu-right"
-                        text: "Sample 2.2"
+                    # Used to move the text up
+                    ScrollView:

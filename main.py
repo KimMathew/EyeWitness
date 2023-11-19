@@ -150,8 +150,8 @@ class MyApp(MDApp):
         
 
         # For Users
-        self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\homescreen.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\screenreport.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\homescreen.kv"))
         
         # For Enforcers
         self.screen_manager.add_widget(Builder.load_file("Screens\\Enforcer_Screens\\enforcer_screen_report.kv"))
