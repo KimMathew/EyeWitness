@@ -10,6 +10,7 @@ from kivy.core.window import Window
 from kivymd.app import MDApp
 from kivy.metrics import dp
 from kivymd.toast import toast
+from kivy.uix.image import Image
 import random
 import string
 import mysql.connector
@@ -141,9 +142,10 @@ class MyApp(MDApp):
 
         self.screen_manager = MDScreenManager()
         # Login Screens
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(homescreen_enforcer)
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
+        
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
         homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
@@ -268,6 +270,9 @@ class MyApp(MDApp):
                 self.update_username_label()
                 self.screen_manager.current = 'homescreen'
                 toast(f"Login successful! Welcome, {self.current_user['name']}.")
+
+                # call credit score function
+                self.display_credit_score_image(self.current_user['user_id'])
             else:
                 toast("User not found or incorrect password!")
         except mysql.connector.Error as err:
@@ -329,6 +334,50 @@ class MyApp(MDApp):
     def menu_callback(self):
         if self.status_screen:
             self.status_screen.menu_callback()
+
+    # Displaying Credit score
+    def display_credit_score_image(self, user_id):
+        # Fetch the user's credit score from the database
+        print(f"Hello {user_id}!")
+        conn = self.get_db_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("SELECT CreditScore FROM UserProfiles WHERE ProfileID = %s", (user_id,))
+            result = cursor.fetchone()
+            if result:
+                credit_score = result[0]
+            else:
+                print(f"No credit score found for user_id: {user_id}")
+                return
+        except mysql.connector.Error as err:
+            print(f"Database error: {err}")
+            return
+        finally:
+            cursor.close()
+            conn.close()
+
+        # Determine the appropriate image path based on the credit score
+        if 81 <= credit_score:
+            selected_image_path = 'Screens\\Assets\\Excellent.png'
+        elif 61 <= credit_score <= 80:
+            selected_image_path = 'Screens\\Assets\\Good.png'
+        elif 41 <= credit_score <= 60:
+            selected_image_path = 'Screens\\Assets\\Fair.png'
+        elif 21 <= credit_score <= 40:
+            selected_image_path = 'Screens\\Assets\\Poor.png'
+        elif 1 <= credit_score <= 20:
+            selected_image_path = 'Screens\\Assets\\VeryPoor.png'
+        else:
+            selected_image_path = 'Screens\\Assets\\Fair.png'  # Provide a default image for unexpected cases
+
+        # Add the image to the BoxLayout with id 'image_container'
+        homescreen = self.screen_manager.get_screen('homescreen')
+        image_container = homescreen.ids.image_container
+        credit_score_label = homescreen.ids.credit_score_label  # Get the label object
+
+        image_container.clear_widgets()
+        image_container.add_widget(Image(source=selected_image_path))
+        credit_score_label.text = f"Trustiness: {credit_score}"  # Update the label's text
 
 if __name__ == "__main__":
     LabelBase.register(name="MPoppins", fn_regular="Screens\\Assets\\Poppins\\Poppins-Medium.ttf")

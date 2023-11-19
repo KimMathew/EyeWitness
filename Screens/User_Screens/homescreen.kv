@@ -67,12 +67,28 @@ MDScreen:
                             MDCard:
                                 size_hint: None, None
                                 size: "320dp", "150dp"
+                                orientation: "vertical"
                                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                 elevation: 0.5
                                 md_bg_color: [1, 1, 1, 1]
 
-                                MDCardLabel:
-                                    text: "Credit Score"
+                                BoxLayout:
+                                    id: image_container
+                                    orientation: "vertical"
+                                    size_hint_y: 0.7
+
+                                    Image:
+                                        source: "Screens\\Assets\\Good.png"
+                                    
+                                MDLabel:
+                                    id: credit_score_label
+                                    text: "Your Text Here"
+                                    size_hint_y: 0.3
+                                    halign: "center"
+                                    theme_text_color: "Custom"
+                                    text_color: "black"
+                                    font_name: "MPoppins"
+                                    font_size: "15sp"
 
                             MDGridLayout:
                                 cols: 2
