@@ -67,7 +67,7 @@ KV = '''
         height: self.minimum_height  # Adjust the height to fit the content
         
         MDLabel:
-            text: "Update Status"
+            text: "Report History"
             font_name: "BPoppins"
             font_size: "22sp"
             size_hint_y: None
