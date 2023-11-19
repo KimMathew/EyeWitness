@@ -68,7 +68,7 @@ class DataHandler:
         image_path = screen_report.ids.imagepath.text
         details = screen_report.ids.details.text
         urgency = screen_report.ids.urgency.text
-        status = "pending"
+        status = "Pending"
         date_created = datetime.now().strftime("%Y-%m-%d")
 
         cursor.execute(
@@ -83,6 +83,25 @@ class DataHandler:
         screen_report.ids.imagepath.text = ""
         screen_report.ids.details.text = ""
         screen_report.ids.urgency.text = ""
+    
+    def submit_sos(self):
+        
+        reportInitial = random.randint(10, 999)
+        reportID = str(reportInitial)
+        title = "SOS"
+        incident_type = "NONE"
+        image_path = "NONE"
+        details = "NONE"
+        urgency = "HIGH"
+        status = "Pending"
+        date_created = datetime.now().strftime("%Y-%m-%d")
+        
+        cursor.execute(
+            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.app.current_user['user_id'])
+        )
+        db.commit()
+    
 class SuccessDialog:
     def __init__(self, app, transition_function):
         self.app = app
@@ -272,6 +291,10 @@ class MyApp(MDApp):
         self.data_handler.submit_data('screenreport')  # Pass the screen name from which data will be submitted
         # Change the screen after submitting the data
         self.screen_manager.current = new_screen_name
+    
+    #submit sos
+    def submitSos(self):
+        self.data_handler.submit_sos()
         
     def show_user_success_dialog(self, transition_screen):
         # Method to trigger the success dialog for user
