@@ -265,6 +265,7 @@ class MyApp(MDApp):
                     "email": user[2],
                     # ... Include other relevant details ...
                 }
+                self.update_username_label()
                 self.screen_manager.current = 'homescreen'
                 toast(f"Login successful! Welcome, {self.current_user['name']}.")
             else:
@@ -276,6 +277,14 @@ class MyApp(MDApp):
             cursor.close()
             conn.close()
     
+    # dynamically change the username
+    def update_username_label(self):
+        # Assuming 'homescreen' is the name of your screen with the username label
+        homescreen = self.screen_manager.get_screen('homescreen')
+        # Update the label's text with the current user's name
+        # Ensure you have an id for your MDLabel like id: username_label
+        homescreen.ids.currentUser.text = self.current_user['name']
+        
     # Reporting functions
     def show_incident_type_dropdown(self, caller):
         incident_types = ["Medical Emergency", "Natural Disaster", "Security Threat", "Others"]
