@@ -221,7 +221,8 @@ class ReportHistory(Screen):
         self.list_view.clear_widgets()
 
         # SQL query to select only reports with status not equal to 'resolved' or 'False Report'
-        cursor.execute("SELECT ReportId, Title FROM report WHERE status != 'resolved' AND status != 'False Report'")
+        query = "SELECT ReportId, Title FROM report WHERE ProfileID = %s"
+        cursor.execute(query, (self.user_id,))
         rows = cursor.fetchall()
 
         red_color = [1, 0, 0, 1]  # Red color in RGBA
