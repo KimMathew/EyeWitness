@@ -154,15 +154,19 @@ KV = '''
     
 '''
 
-class CustomTwoLineListItem(TwoLineListItem): # Added
-    def __init__(self, primary_font_name="BPoppins", secondary_font_name="MPoppins", primary_font_size=20, secondary_font_size=16, **kwargs):
+class CustomTwoLineListItem(TwoLineListItem):
+    def __init__(self, primary_font_name="BPoppins", secondary_font_name="MPoppins", primary_font_size=20, secondary_font_size=16, primary_color=[0, 0, 0, 1], secondary_color=[0, 0, 0, 1], **kwargs):
         super().__init__(**kwargs)
-        # Override primary label
+        # Override primary label properties
         self.ids._lbl_primary.font_name = primary_font_name
         self.ids._lbl_primary.font_size = primary_font_size 
-        # Override secondary label
+        self.ids._lbl_primary.color = primary_color
+
+        # Override secondary label properties
         self.ids._lbl_secondary.font_name = secondary_font_name
         self.ids._lbl_secondary.font_size = secondary_font_size
+        self.ids._lbl_secondary.color = secondary_color
+
 
 # Custom content class for the dialog
 class DialogContent(BoxLayout):
@@ -228,15 +232,20 @@ class StatusScreen(Screen):
         cursor.execute("SELECT ReportId, Title FROM report WHERE status != 'resolved' AND status != 'False Report'")
         rows = cursor.fetchall()
 
+        red_color = [1, 0, 0, 1]  # Red color in RGBA
+        black_color = [0, 0, 0, 1]  # Black color in RGBA
+
         for row in rows:
+            color = red_color if row[1] == 'SOS' else black_color
+
             item = CustomTwoLineListItem(
                 text='Report ID: ' + str(row[0]),
                 secondary_text='Title: ' + row[1],
+                primary_color=color,
                 on_release=lambda x, row=row: self.open_dialog(row)
             )
             self.list_view.add_widget(item)
 
-        self.list_view.padding = [0, 0, 0, 0]
 
     # Method to update the text for TwoPartLabel
     def set_two_part_label_text(self, label_id, prefix, data_text):
