@@ -334,17 +334,51 @@ class StatusScreen(Screen):
     
 
     def submit_data(self, instance):
-        cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
+        # Check if the status is being updated to "on the process"
+        if self.new_status == "On the Process":
+            # Update the report status
+            cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
+
+            # Retrieve the ProfileID using a subquery
+            cursor.execute("SELECT ProfileID FROM report WHERE ReportId = %s", (self.selected_report_id,))
+            profile_id = cursor.fetchone()[0]
+
+            # Add 5 to the CreditScore for the retrieved ProfileID
+            cursor.execute("UPDATE UserProfiles SET CreditScore = CreditScore + 5 WHERE ProfileID = %s", (profile_id,))
+        else:
+            # For other status updates, just update the report status
+            cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
+
+        # Commit the changes to the database
         db.commit()
+
+        # Dismiss the dialog and refresh the list
         self.dialog.dismiss()
         self.refresh_list()
     
     def falseReport(self):
         new_status = "False Report"
+
+        # Update the report status
         cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (new_status, self.selected_report_id))
-        db.commit()
+
+        # Retrieve ProfileID from the report
+        cursor.execute("SELECT ProfileID FROM report WHERE ReportId = %s", (self.selected_report_id,))
+        data = cursor.fetchone()
+
+        if data:
+            profile_id = data[0]
+
+            # Deduct 10 from the CreditScore
+            cursor.execute("UPDATE UserProfiles SET CreditScore = CreditScore - 10 WHERE ProfileId = %s", (profile_id,))
+
+            # Commit the changes to the database
+            db.commit()
+
+        # Dismiss the dialog and refresh the list
         self.dialog.dismiss()
         self.refresh_list()
+
         
     def refresh_list(self):
         self.list_view.clear_widgets()  # Clear the current list

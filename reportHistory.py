@@ -295,11 +295,6 @@ class ReportHistory(Screen):
 
     def menu_callback(self):
         self.dropdown.open()
-    
-        
-    def refresh_list(self):
-        self.list_view.clear_widgets()  # Clear the current list
-        self.populate_list()  # Repopulate the list
 
     # For Cancel Button
     def dismiss_dialog(self, *args):
