@@ -17,6 +17,10 @@ import mysql.connector
 from datetime import datetime
 from status import StatusScreen  # Import the StatusScreen
 from reportHistory import ReportHistory
+from kivy.app import App
+from kivy.uix.screenmanager import Screen
+from kivy.clock import Clock
+import time
 
 host = "sql12.freesqldatabase.com"
 user = "sql12662532"
@@ -142,13 +146,13 @@ class MyApp(MDApp):
 
         self.screen_manager = MDScreenManager()
         # Login Screens
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
-        homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
-        self.screen_manager.add_widget(homescreen_enforcer)
+        self.homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
+        self.screen_manager.add_widget(self.homescreen_enforcer)
         
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
-        homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
+        self.homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
         
 
         # For Users
@@ -166,6 +170,18 @@ class MyApp(MDApp):
         return self.screen_manager
     
     
+    # Used to dynamically update the number of reports
+    def update_no_of_reports(self):
+        # Execute the query
+        query = "SELECT COUNT(*) FROM report WHERE status != 'resolved' AND status != 'False Report'"
+        cursor.execute(query)
+        
+        # Fetch the result
+        result = cursor.fetchone()
+        self.report_count = int(result[0]) if result else 0  # Use 'report_count' consistently
+        self.homescreen_enforcer.ids.reportNum.text = str(self.report_count)
+
+
     # Used to transition screen coming from other py file(status update of enforcer)
     def add_enforcer_status_screen(self):
         if not hasattr(self, 'status_screen'):

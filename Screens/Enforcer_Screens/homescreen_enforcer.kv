@@ -33,6 +33,8 @@
 
 MDScreen:
     name: "homescreen_enforcer"
+    on_pre_enter: app.update_no_of_reports()
+
 
     canvas.before:
         Color:
