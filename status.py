@@ -334,27 +334,46 @@ class StatusScreen(Screen):
     
 
     def submit_data(self, instance):
-        # Check if the status is being updated to "on the process"
-        if self.new_status == "On the Process":
-            # Update the report status
-            cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
+        try:
+            # Update the report status for all statuses
+            cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", 
+                        (self.new_status, self.selected_report_id))
 
             # Retrieve the ProfileID using a subquery
-            cursor.execute("SELECT ProfileID FROM report WHERE ReportId = %s", (self.selected_report_id,))
+            cursor.execute("SELECT ProfileID FROM report WHERE ReportId = %s", 
+                        (self.selected_report_id,))
             profile_id = cursor.fetchone()[0]
 
-            # Add 5 to the CreditScore for the retrieved ProfileID
-            cursor.execute("UPDATE UserProfiles SET CreditScore = CreditScore + 5 WHERE ProfileID = %s", (profile_id,))
-        else:
-            # For other status updates, just update the report status
-            cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
+            # Check specific status and perform corresponding actions
+            if self.new_status == "Preparing to deploy":
+                pass  # No unique action needed for this status
 
-        # Commit the changes to the database
-        db.commit()
+            elif self.new_status == "On the Process":
+                # Add 5 to the CreditScore for the retrieved ProfileID
+                cursor.execute("UPDATE UserProfiles SET CreditScore = CreditScore + 5 WHERE ProfileID = %s", 
+                            (profile_id,))
 
-        # Dismiss the dialog and refresh the list
-        self.dialog.dismiss()
-        self.refresh_list()
+            elif self.new_status == "Resolved":
+                pass  # No unique action needed for this status
+
+            # Common operation for all statuses - populate the message area
+            message = f'Your report status has been updated to {self.new_status}'
+            cursor.execute("INSERT INTO UserInbox (ProfileID, Message) VALUES (%s, %s)", 
+                        (self.selected_profile_id, message))
+
+            # Commit the changes to the database
+            db.commit()
+
+        except Exception as e:
+            # Handle any exception that might occur
+            db.rollback()
+            print(f"An error occurred: {e}")
+
+        finally:
+            # Dismiss the dialog and refresh the list in all cases
+            self.dialog.dismiss()
+            self.refresh_list()
+
     
     def falseReport(self):
         new_status = "False Report"

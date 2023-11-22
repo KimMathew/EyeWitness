@@ -315,12 +315,12 @@ class MyApp(MDApp):
         self.data_handler = DataHandler(self)
 
         self.screen_manager = MDScreenManager()
-        self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
         # Login Screens
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         self.homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(self.homescreen_enforcer)
         
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         self.homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
