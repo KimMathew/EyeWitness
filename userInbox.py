@@ -23,23 +23,28 @@ KV = '''
 <TwoPartLabel@BoxLayout>:
     orientation: 'horizontal'
     size_hint_y: None
+    size_hint_x: 1
     padding: 1
 
     MDLabel:
         id: label_prefix
         font_name: "BPoppins"
         halign: "left"  
+        size_hint_x: 1
         size_hint_y: None
         text: ""
         font_size: "15sp"
+        text_size: self.width, None
 
     MDLabel:
         id: label_dynamic
         font_name: "MPoppins"
         halign: "center"  
+        size_hint_x: 1
         size_hint_y: None
         text: ""
         font_size: "14sp"
+        text_size: self.width, None
         
 
 <Separator@MDSeparator>:
@@ -139,7 +144,9 @@ KV = '''
 '''
 
 class CustomTwoLineListItem(TwoLineListItem):
-    def __init__(self, primary_font_name="BPoppins", secondary_font_name="MPoppins", primary_font_size=20, secondary_font_size=16, primary_color=[0, 0, 0, 1], secondary_color=[0, 0, 0, 1], **kwargs):
+    def __init__(self, primary_font_name="BPoppins", secondary_font_name="MPoppins", 
+                 primary_font_size=20, secondary_font_size=16, 
+                 primary_color=[0, 0, 0, 1], secondary_color=[0, 0, 0, 1], **kwargs):
         super().__init__(**kwargs)
         # Override primary label properties
         self.ids._lbl_primary.font_name = primary_font_name
@@ -150,6 +157,17 @@ class CustomTwoLineListItem(TwoLineListItem):
         self.ids._lbl_secondary.font_name = secondary_font_name
         self.ids._lbl_secondary.font_size = secondary_font_size
         self.ids._lbl_secondary.color = secondary_color
+        self.ids._lbl_secondary.text_size = (self.width, None)  # Set the width to the label's width
+        self.ids._lbl_secondary.size_hint_y = None  # Allow the label to grow vertically
+        self.ids._lbl_secondary.halign = 'left'  # Horizontal alignment
+        self.ids._lbl_secondary.valign = 'top'  # Vertical alignment
+
+        # Bind size to properly resize with the layout
+        self.bind(size=self._update_text_size)
+
+    def _update_text_size(self, instance, value):
+        self.ids._lbl_secondary.text_size = (value[0], None)
+
 
 # Custom content class for the dialog
 class DialogContent(BoxLayout):
@@ -221,20 +239,15 @@ class UserInbox(Screen):
         self.list_view.clear_widgets()
 
         # SQL query to select only reports with status not equal to 'resolved' or 'False Report'
-        query = "SELECT ReportId, Title FROM report WHERE ProfileID = %s"
+        query = "SELECT ProfileID, ReportID, Message FROM UserInbox WHERE ProfileID = %s"
         cursor.execute(query, (self.user_id,))
         rows = cursor.fetchall()
-        
-        red_color = [1, 0, 0, 1]  # Red color in RGBA
-        black_color = [0, 0, 0, 1]  # Black color in RGBA
 
         for row in rows:
-            color = red_color if row[1] == 'SOS' else black_color
-
+            
             item = CustomTwoLineListItem(
-                text='Report ID: ' + str(row[0]),
-                secondary_text='Title: ' + row[1],
-                primary_color=color,
+                text='Report ID: ' + str(row[1]),
+                secondary_text= row[2],
             )
             self.list_view.add_widget(item)
 

@@ -358,8 +358,8 @@ class StatusScreen(Screen):
 
             # Common operation for all statuses - populate the message area
             message = f'Your report status has been updated to {self.new_status}'
-            cursor.execute("INSERT INTO UserInbox (ProfileID, Message) VALUES (%s, %s)", 
-                        (self.selected_profile_id, message))
+            cursor.execute("INSERT INTO UserInbox (ProfileID, ReportID, Message) VALUES (%s, %s, %s)", 
+                        (self.selected_profile_id, self.selected_report_id, message))
 
             # Commit the changes to the database
             db.commit()
