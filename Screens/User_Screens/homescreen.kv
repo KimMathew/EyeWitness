@@ -8,6 +8,7 @@
     md_bg_color: [1, 1, 1, 1]
     focus_behavior: True
     focus_color: "#E1E0E2"
+    padding: 0, 10, 0, 20
 
 <CardButton@MDIconButton>
     icon_size: "80sp"
@@ -71,7 +72,7 @@ MDScreen:
                                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                 elevation: 0.5
                                 md_bg_color: [1, 1, 1, 1]
-                                padding: 0, 20, 0, 10
+                                padding: 0, 20, 0, 15
                                 spacing: "10dp"
 
                                 BoxLayout:
@@ -84,13 +85,13 @@ MDScreen:
                                     
                                 MDLabel:
                                     id: credit_score_label
-                                    text: "Your Text Here"
+                                    text: "Unknown"
                                     size_hint_y: 0.3
                                     halign: "center"
                                     theme_text_color: "Custom"
                                     text_color: "black"
                                     font_name: "MPoppins"
-                                    font_size: "18sp"
+                                    font_size: "20sp"
 
                             MDGridLayout:
                                 cols: 2

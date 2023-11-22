@@ -15,6 +15,7 @@
     md_bg_color: [1, 1, 1, 1]
     focus_behavior: True
     focus_color: "#E1E0E2"
+    padding: 0, 10, 0, 20
 
 <CardButton@MDIconButton>
     icon_size: "80sp"
@@ -77,9 +78,31 @@ MDScreen:
                                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                 elevation: 0.5
                                 md_bg_color: [1, 1, 1, 1]
+                                padding: 0, 0, 0, 45
+                                md_bg_color:"#186AE8"
 
-                                MDCardLabel:
-                                    text: "Credit Score"
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: None
+                                    padding: 20, 20, 20, 20
+
+                                    MDLabel:
+                                        text: "Number of Reports:"
+                                        halign: "center"
+                                        font_name: "BPoppins"
+                                        font_size: "24sp"
+                                        theme_text_color: "Custom"
+                                        text_color: "white"
+
+                                    MDLabel:
+                                        # use this to change the number based on no. of reports
+                                        id: reportNum
+                                        text: "0"
+                                        halign: "center"
+                                        font_name: "BPoppins"
+                                        font_size: "60sp"
+                                        theme_text_color: "Custom"
+                                        text_color: "white"
 
                             MDGridLayout:
                                 cols: 2
@@ -87,44 +110,6 @@ MDScreen:
                                 adaptive_width: True
                                 spacing: "20dp"
                                 pos_hint: {"center_x": 0.5, "center_y": 0.25}
-
-                                CustomMDCard:
-                                
-                                    CardBox: 
-                                        
-                                        CardButton:
-                                            icon: "Screens\\Assets\\report.png"
-                                            on_press:
-                                                root.manager.transition = NoTransition()
-                                                root.manager.current = "enforcer_screen_report"
-                                        
-                                        MDCardLabel:
-                                            text: "Report Incident"
-
-                                CustomMDCard:
-                                    
-                                    CardBox:
-                                        
-                                        CardButton:
-                                            icon: "Screens\\Assets\\sos.png"
-                                            on_press:
-                                                app.show_enforcer_success_dialog('homescreen_enforcer')
-
-                                        MDCardLabel:
-                                            text: "SOS"
-
-                                CustomMDCard:
-                                    
-                                    CardBox:
-
-                                        CardButton:
-                                            icon: "Screens\\Assets\\history.png"
-                                            on_press: 
-                                                root.manager.transition = NoTransition()
-                                                root.manager.current = "enforcer_report_history"
-
-                                        MDCardLabel:
-                                            text: "Report History"
 
                                 CustomMDCard:
                                     
