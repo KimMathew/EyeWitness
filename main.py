@@ -316,12 +316,12 @@ class MyApp(MDApp):
 
         self.screen_manager = MDScreenManager()
         # Login Screens
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
         self.homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(self.homescreen_enforcer)
         
-        self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         self.homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
         
@@ -424,22 +424,22 @@ class MyApp(MDApp):
             # If strptime raises a ValueError, it means the format is incorrect
             toast("Invalid birthday format. Please use MM/DD/YYYY.")
             return
-
+        # Set default account type
+        account_type = "User"
+        
         # If all validations pass, proceed with creating a user ID and formatting the birthdate
         user_id = self.generate_user_id()
         formatted_birthdate = datetime.strptime(birthdate, '%m/%d/%Y').date()
 
-        # Database connection and cursor setup
+         # Database connection and cursor setup
         conn = self.get_db_connection()
         cursor = conn.cursor()
-        
-        accountType = "Pending"
         try:
             # Insert the new user's data into the database
             cursor.execute(
-                "INSERT INTO UserProfiles (ProfileID, UserName, Email, Birthdate, UserPassword, CreditScore, AccountType) "
-                "VALUES (%s, %s, %s, %s, %s, 100, %s)",
-                (user_id, name, email, formatted_birthdate, password, accountType)
+                "INSERT INTO UserProfiles (ProfileID, UserName, Email, Birthdate, UserPassword, AccountType) "
+                "VALUES (%s, %s, %s, %s, %s, %s)",
+                (user_id, name, email, formatted_birthdate, password, account_type)
             )
             conn.commit()
             # Inform the user of successful signup and navigate to the login screen
@@ -464,10 +464,17 @@ class MyApp(MDApp):
                     "user_id": user[0],  # Assuming ProfileID is the first column
                     "name": user[1],     # Adjust indices based on your table structure
                     "email": user[2],
+                    "account_type": user[6],
                     # ... Include other relevant details ...
                 }
                 self.update_username_label()
-                self.screen_manager.current = 'homescreen'
+                # Check account type and redirect accordingly
+                if self.current_user["account_type"] == "Enforcer":
+                    self.screen_manager.current = 'homescreen_enforcer'
+                elif self.current_user["account_type"] == "Admin":
+                    self.screen_manager.current = 'homescreen_admin'
+                else:
+                    self.screen_manager.current = 'homescreen'
                 toast(f"Login successful! Welcome, {self.current_user['name']}.")
 
                 # call credit score function
