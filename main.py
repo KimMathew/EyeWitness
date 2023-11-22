@@ -142,10 +142,9 @@ class MyApp(MDApp):
 
         self.screen_manager = MDScreenManager()
         # Login Screens
-        self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\homescreen.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(homescreen_enforcer)
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
@@ -153,6 +152,7 @@ class MyApp(MDApp):
         
 
         # For Users
+        self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\homescreen.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\screenreport.kv"))
         
         # For Enforcers
@@ -335,6 +335,18 @@ class MyApp(MDApp):
         if self.status_screen:
             self.status_screen.menu_callback()
 
+    def get_credit_score_color(self, score):
+        if score >= 81:
+            return (0, 128/255, 55/255, 1)  # Green for excellent scores
+        elif score >= 61:
+            return (126/255, 217/255, 87/255, 1)  # Darker green for good scores
+        elif score >= 41:
+            return (237/255, 183/255, 0, 1)  # Yellow for fair scores
+        elif score >= 21:
+            return (255/255, 118/255, 67/255, 1)  # Orange for poor scores
+        else:
+            return (231/255, 0, 51/255, 1)  # Red for very poor scores
+
     # Displaying Credit score
     def display_credit_score_image(self, user_id):
         # Fetch the user's credit score from the database
@@ -374,6 +386,9 @@ class MyApp(MDApp):
         homescreen = self.screen_manager.get_screen('homescreen')
         image_container = homescreen.ids.image_container
         credit_score_label = homescreen.ids.credit_score_label  # Get the label object
+        # Determine the color based on the credit score
+        credit_score_color = self.get_credit_score_color(credit_score)
+        credit_score_label.color = credit_score_color
 
         image_container.clear_widgets()
         image_container.add_widget(Image(source=selected_image_path))
