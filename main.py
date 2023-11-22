@@ -14,9 +14,13 @@ from kivy.uix.image import Image
 import random
 import string
 import mysql.connector
-from datetime import datetime
+from datetime import datetime, timedelta
 from status import StatusScreen  # Import the StatusScreen
 from reportHistory import ReportHistory
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.spinner import Spinner
+from kivy_garden.graph import Graph, MeshLinePlot
 from userInbox import UserInbox
 from kivy.app import App
 from kivy.uix.screenmanager import Screen
@@ -137,6 +141,171 @@ class SuccessDialog:
     # def transition_to_home(self, dt):
         # self.root.current = self.transition_screen
 
+#Displaying Statistics
+class MyLayout(Screen):
+    def __init__(self, **kwargs):
+        super(MyLayout, self).__init__(**kwargs)
+        Clock.schedule_once(self.initialize_graph)
+
+    def initialize_graph(self, dt):
+        # Set up the default graph properties
+        # Replace 'graph_id' with the actual id of your Graph widget
+        InitialGraph = ['first_graph', 'second_graph', 'third_graph', 'last_graph']
+
+        for graph_name in InitialGraph:
+            graph_widget = self.ids[graph_name]
+            graph_widget.xlabel = 'Date'
+            graph_widget.ylabel = 'Value'
+            graph_widget.x_ticks_minor = 5
+            graph_widget.x_ticks_major = 10
+            graph_widget.y_ticks_minor = 1
+            graph_widget.y_ticks_major = 5
+            graph_widget.x_grid = True
+            graph_widget.y_grid = True
+            graph_widget.x_grid_label = True
+            graph_widget.y_grid_label = True
+            graph_widget.padding = 5
+            graph_widget.xlog = False
+            graph_widget.ylog = False
+            graph_widget.tick_color = [1, 0, 0, 1]
+            graph_widget.border_color = [0, 0, 1, 1]
+            graph_widget.label_options = {'color': [0, 1, 0, 1]}
+            graph_widget.background_color = [1, 1, 1, 1]
+            graph_widget.grid_color = [0.6, 0.6, 0.6, 1]
+
+
+            # Optional: Set default range if you know the expected range of your data
+            graph_widget.xmin = 738802  # Adjust these values based on your data
+            graph_widget.xmax = 738842
+            graph_widget.ymin = 0
+            graph_widget.ymax = 15
+
+    def update_graph(self, graph_id, timeframe, incident_type):
+        # Fetch data from the database
+        data = self.fetch_data_from_db(timeframe)
+
+        # Process the data for graphing
+        processed_data = self.process_data(data)
+
+        print(f"Processed Data: {processed_data}")
+
+        # Get the graph widget reference
+        graph_widget = self.ids[graph_id]
+
+        # Clear existing plots
+        for plot in graph_widget.plots[:]:
+            graph_widget.remove_plot(plot)
+
+        # Plot only the specific incident type for each graph
+        points = processed_data.get(incident_type, [])
+        if points:  # Check if there are points to plot for the specific incident type
+            color = {'Medical Emergency': [1, 0, 0, 1],  # Red
+                    'Natural Disaster': [0, 1, 0, 1],     # Green
+                    'Security Threat': [0, 0, 1, 1], # Blue
+                    'Others': [1, 1, 0, 1]}.get(incident_type, [1, 1, 1, 1])  # Default to white
+
+            plot = MeshLinePlot(color=color)
+            plot.points = points
+            graph_widget.add_plot(plot)
+        else:
+            print(f"No data to plot for {incident_type}.")
+
+    def fetch_data_from_db(self, timeframe):
+        results = []  # Initialize results to an empty list in case of errors
+        conn = None
+        cursor = None  # Initialize cursor here
+        try:
+            conn = mysql.connector.connect(
+                host="sql12.freesqldatabase.com",
+                user="sql12662532",
+                passwd="viDRIhzYSq",
+                database="sql12662532"
+            )
+            cursor = conn.cursor()
+
+            # Determine the date range for the query based on the timeframe
+            end_date = datetime.today()
+            if timeframe == "1 Month":
+                start_date = end_date - timedelta(days=30)
+            elif timeframe == "3 Months":
+                start_date = end_date - timedelta(days=90)
+            elif timeframe == "6 Months":
+                start_date = end_date - timedelta(days=180)
+            elif timeframe == "1 Year":
+                start_date = end_date - timedelta(days=365)
+            elif timeframe == "All":
+                start_date = datetime(2000, 1, 1)  # Fetch all records from an early date
+            else:
+                start_date = end_date  # For unexpected timeframes, no records will be fetched
+            # SQL query to get the date, incident type, and count
+            query = (
+                "SELECT dateCreated, checklist, COUNT(*) "
+                "FROM report "
+                "WHERE checklist IN ('Medical Emergency', 'Natural Disaster', 'Security Threat', 'Others') "
+                "AND dateCreated BETWEEN %s AND %s "
+                "AND status != 'False Report' "
+                "GROUP BY dateCreated, checklist "
+                "ORDER BY dateCreated, checklist"
+            )
+
+            start_date_str = start_date.strftime("%Y-%m-%d")
+            end_date_str = end_date.strftime("%Y-%m-%d")
+
+            print(f"{start_date_str} to {end_date_str}")
+
+            cursor.execute(query, (start_date_str, end_date_str))
+            results = cursor.fetchall()
+
+            print(f"Data: {results}")
+
+        except mysql.connector.Error as e:
+            print(f"Error fetching data from db: {e}")
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+
+        return results
+
+    def process_data(self, data):
+        # data is expected to be in the format: [(date, incident_type, count), ...]
+        processed_data = {
+            "Medical Emergency": [],
+            "Natural Disaster": [],
+            "Security Threat": [],
+            "Others": []
+        }
+
+        for date, incident_type, count in data:
+            print(f"Original Data: {date}, {incident_type}, {count}")  # Debugging print statement
+            # Convert date to a datetime object if it's a string
+            if isinstance(date, str):
+                try:
+                    date = datetime.strptime(date, "%Y-%m-%d").date()
+                except ValueError as e:
+                    print(f"Date conversion error: {e}")
+                    continue
+            # Append the tuple (date.toordinal(), count) to the corresponding list
+            if incident_type in processed_data:
+                processed_data[incident_type].append((date.toordinal(), count))
+            else:
+                print(f"Incident type '{incident_type}' not in processed_data keys")
+
+        return processed_data
+
+    def first_spinner(self, spinner, text):
+        self.update_graph('first_graph', text, 'Medical Emergency')
+
+    def second_spinner(self, spinner, text):
+        self.update_graph('second_graph', text, 'Natural Disaster')
+
+    def third_spinner(self, spinner, text):
+        self.update_graph('third_graph', text, 'Security Threat')
+
+    def last_spinner(self, spinner, text):
+        self.update_graph('last_graph', text, 'Others')
+
 class MyApp(MDApp):
     dropdown_handler = DropDownHandler()
 
@@ -146,6 +315,7 @@ class MyApp(MDApp):
         self.data_handler = DataHandler(self)
 
         self.screen_manager = MDScreenManager()
+        self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
         # Login Screens
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         self.homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
@@ -166,7 +336,9 @@ class MyApp(MDApp):
 
 
         # For Admins
-        self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
+        
+        admin_layout = MyLayout()
+        self.screen_manager.add_widget(admin_layout)
 
         return self.screen_manager
     
