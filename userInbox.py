@@ -171,7 +171,7 @@ cursor = db.cursor()
 
 Window.size = (360, 600)
 
-class ReportHistory(Screen):
+class UserInbox(Screen):
     user_id = None  # Add a user_id attribute comg from main.py
     
     dropdown = ObjectProperty()
@@ -208,7 +208,7 @@ class ReportHistory(Screen):
         self.manager.current = 'homescreen'
     
     def on_enter(self, *args):
-        super(ReportHistory, self).on_enter(*args)
+        super(UserInbox, self).on_enter(*args)
         self.refresh_list()
 
 

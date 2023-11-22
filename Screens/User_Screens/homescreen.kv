@@ -174,9 +174,7 @@ MDScreen:
                             padding: "12dp", 0, 0, 0
                             size_hint_y: None
                             focus_color: "#80B3FF"
-
-                            # add mail screen
-                            #on_release:
+                            on_release:app.add_user_inbox_screen()
 
                         MDRoundFlatIconButton:
                             text: "Log Out"

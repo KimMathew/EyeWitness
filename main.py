@@ -17,6 +17,7 @@ import mysql.connector
 from datetime import datetime
 from status import StatusScreen  # Import the StatusScreen
 from reportHistory import ReportHistory
+from userInbox import UserInbox
 from kivy.app import App
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
@@ -146,10 +147,10 @@ class MyApp(MDApp):
 
         self.screen_manager = MDScreenManager()
         # Login Screens
+        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         self.homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(self.homescreen_enforcer)
         
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         self.homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
@@ -195,8 +196,18 @@ class MyApp(MDApp):
             self.report_history = ReportHistory(name='report_history')
             self.screen_manager.add_widget(self.report_history)
         # Pass the user_id to the ReportHistory instance
+        # To use an instance coming from this main.py to reportHistory
         self.report_history.user_id = self.current_user['user_id']
         self.screen_manager.current = 'report_history'
+    
+    # Used to transition screen coming from other py file(view past reports of logged in users)
+    def add_user_inbox_screen(self):
+        if not hasattr(self, 'user_inbox'):
+            self.user_inbox = UserInbox(name='user_inbox')
+            self.screen_manager.add_widget(self.user_inbox)
+        # Pass the user_id to the ReportHistory instance
+        self.user_inbox.user_id = self.current_user['user_id']
+        self.screen_manager.current = 'user_inbox'
     
     def generate_user_id(self):
         characters = string.ascii_letters + string.digits
