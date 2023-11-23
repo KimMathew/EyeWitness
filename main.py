@@ -448,6 +448,129 @@ class AllReportHistory(Screen):
     def dismiss_dialog(self, *args):
         self.dialog.dismiss()
 
+
+
+# For view  users of admin
+class CustomTwoLineListItem(TwoLineListItem):
+    def __init__(self, primary_font_name="BPoppins", secondary_font_name="MPoppins", primary_font_size=20, secondary_font_size=16, primary_color=[0, 0, 0, 1], secondary_color=[0, 0, 0, 1], **kwargs):
+        super().__init__(**kwargs)
+        # Override primary label properties
+        self.ids._lbl_primary.font_name = primary_font_name
+        self.ids._lbl_primary.font_size = primary_font_size 
+        self.ids._lbl_primary.color = primary_color
+
+        # Override secondary label properties
+        self.ids._lbl_secondary.font_name = secondary_font_name
+        self.ids._lbl_secondary.font_size = secondary_font_size
+        self.ids._lbl_secondary.color = secondary_color
+
+# Custom content class for the dialog
+class UserContent(BoxLayout):
+    pass
+
+class UserAccounts(Screen):
+    
+    dropdown = ObjectProperty()
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        # Layout for Back Button and ScrollView
+        layout = BoxLayout(orientation='vertical')
+        
+        # ScrollView and List View for Reports
+        scroll = ScrollView()
+        self.list_view = MDList()
+        self.list_view.clear_widgets()
+        scroll.add_widget(self.list_view)
+        layout.add_widget(scroll)
+        self.refresh_list()
+        self.add_widget(layout)  # Add the layout to the screen
+
+    def go_back(self, instance):
+        # Switch to home screen
+        self.manager.current = 'homescreen'
+    
+    def on_enter(self, *args):
+        super(UserAccounts, self).on_enter(*args)
+        self.refresh_list()
+
+
+    def refresh_list(self):
+        self.list_view.clear_widgets()  # Clear the current list
+        self.populate_list()  # Repopulate the list with fresh data
+
+    def populate_list(self):
+        # Clear the existing list items before repopulating
+        self.list_view.clear_widgets()
+
+        # SQL query to select only reports with status not equal to 'resolved' or 'False Report'
+        cursor.execute("SELECT ProfileID, UserName FROM UserProfiles")
+        rows = cursor.fetchall()
+
+
+        for row in rows:
+
+            item = CustomTwoLineListItem(
+                text='Profile ID: ' + row[0],
+                secondary_text='Username: ' + row[1],
+                on_release=lambda x, row=row: self.open_dialog(row)
+            )
+            self.list_view.add_widget(item)
+
+    # Method to update the text for TwoPartLabel
+    def set_two_part_label_text(self, label_id, prefix, data_text):
+        setattr(self.dialog_content.ids[label_id].ids.label_prefix, 'text', prefix)
+        setattr(self.dialog_content.ids[label_id].ids.label_dynamic, 'text', str(data_text))
+
+
+    def open_dialog(self, row):
+        self.selected_profile_id = row[0]  # Store the selected ReportId
+
+        # Fetch data for the selected report
+        cursor.execute("SELECT Username, Email, Birthdate, UserPassword, CreditScore, AccountType FROM UserProfiles WHERE ProfileID = %s", (self.selected_profile_id,))
+        data = cursor.fetchone()
+
+        # Create dialog content
+        self.dialog_content = UserContent()
+
+        if data:
+            # Update label texts
+            self.set_two_part_label_text('username', "Username", data[0])
+            self.set_two_part_label_text('email', "Email:", data[1])
+            self.set_two_part_label_text('birthdate', "Birthdate:", data[2])
+            self.set_two_part_label_text('password', "User Password:", data[3])
+            self.set_two_part_label_text('creditscore', "Credit Score:", data[4])
+            if data[5]:
+                self.set_two_part_label_text('type', "Account Type:", data[5])
+            else:
+                self.set_two_part_label_text('type', "Account Type:", "User")
+
+
+        self.dialog = MDDialog(type="custom",
+                            content_cls=self.dialog_content,
+                            size_hint=(0.8, None),
+                            buttons=[
+                                MDRaisedButton(
+                                    text="Close",
+                                    font_name="BPoppins",
+                                    font_size="14sp",
+                                    theme_text_color="Custom",
+                                    text_color=(1, 1, 1, 1),
+                                    md_bg_color=(76/255, 175/255, 80/255, 1),
+                                    on_release=self.dismiss_dialog
+                                )
+                            ])
+        self.dialog.open()
+        
+
+    def menu_callback(self):
+        self.dropdown.open()
+
+    # For Cancel Button
+    def dismiss_dialog(self, *args):
+        self.dialog.dismiss()
+
 class MyApp(MDApp):
     dropdown_handler = DropDownHandler()
 
@@ -478,13 +601,19 @@ class MyApp(MDApp):
         self.screen_manager.add_widget(Builder.load_file("Screens\\Enforcer_Screens\\enforcer_report_history.kv"))
 
 
+
         # View Reports
-        admin_report = AllReportHistory()
-        self.screen_manager.add_widget(admin_report)
+        
         
         # For Admins
         admin_layout = MyLayout()
         self.screen_manager.add_widget(admin_layout)
+        
+        admin_users = UserAccounts()
+        self.screen_manager.add_widget(admin_users)
+        
+        admin_report = AllReportHistory()
+        self.screen_manager.add_widget(admin_report)
 
         return self.screen_manager
     
@@ -653,7 +782,7 @@ class MyApp(MDApp):
         # Ensure you have an id for your MDLabel like id: username_label
         homescreenEnforcer.ids.currentUser.text = self.current_user['name']
     
-    # dynamically change the username of enforcer
+    # dynamically change the username of admin
     def update_username_admin_label(self):
         # Assuming 'homescreen' is the name of your screen with the username label
         homescreenAdmin = self.screen_manager.get_screen('homescreen_admin')

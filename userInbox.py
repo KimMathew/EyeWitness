@@ -82,63 +82,6 @@ KV = '''
         size_hint_y: None
         height: 500  # Adjust based on your dialog box size
 
-        GridLayout:
-            cols: 1
-            size_hint_y: None
-            size_hint_x: 1  # Take full width of the ScrollView
-            height: self.minimum_height
-            spacing: "15dp"
-            padding: [0, 20, 30, 30]  # Padding: [left, top, right, bottom]
-            pos_hint: {'center_x': 0.5, 'top': 1}  # Adjust pos_hint as needed
-
-            Separator:
-
-            TwoPartLabel:
-                id: username
-                
-            Separator:
-
-            TwoPartLabel:
-                id: title
-
-            Separator:
-                
-            TwoPartLabel:
-                id: checklist
-
-            Separator:
-            
-            TwoPartLabel:
-                id: image_path
-            
-            Separator:
-                
-            TwoPartLabel:
-                id: details
-
-            Separator:
-                
-            TwoPartLabel:
-                id: urgency
-
-            Separator:
-            
-            TwoPartLabel:
-                id: status
-
-            Separator:
-            
-            TwoPartLabel:
-                id: dateCreated
-
-            Separator:
-
-            GridLayout:
-                cols: 2
-                spacing: "10sp"
-                padding: [0, 10, 0, 0]
-                size_hint_y: None
-                height: "48dp"  # Fixed height for the button area
 
     
 '''

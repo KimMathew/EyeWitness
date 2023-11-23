@@ -308,6 +308,76 @@
                 size_hint_y: None
                 height: "48dp"  # Fixed height for the button area
 
+<UserContent>:
+    orientation: "vertical"
+    size_hint_y: None
+    height: "400dp"
+
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height  # Adjust the height to fit the content
+        
+        MDLabel:
+            text: "User Details"
+            font_name: "BPoppins"
+            font_size: "22sp"
+            size_hint_y: None
+            height: self.texture_size[1]
+
+    ScrollView:
+        size_hint_y: None
+        height: 500  # Adjust based on your dialog box size
+
+        GridLayout:
+            cols: 1
+            size_hint_y: None
+            size_hint_x: 1  # Take full width of the ScrollView
+            height: self.minimum_height
+            spacing: "15dp"
+            padding: [0, 20, 30, 30]  # Padding: [left, top, right, bottom]
+            pos_hint: {'center_x': 0.5, 'top': 1}  # Adjust pos_hint as needed
+
+            Separator:
+
+            TwoPartLabel:
+                id: username
+
+            Separator:
+                
+            TwoPartLabel:
+                id: email
+
+            Separator:
+            
+            TwoPartLabel:
+                id: birthdate
+            
+            Separator:
+                
+            TwoPartLabel:
+                id: password
+
+            Separator:
+                
+            TwoPartLabel:
+                id: creditscore
+
+            Separator:
+            
+            TwoPartLabel:
+                id: type
+
+            Separator:
+            
+
+            GridLayout:
+                cols: 2
+                spacing: "10sp"
+                padding: [0, 10, 0, 0]
+                size_hint_y: None
+                height: "48dp"  # Fixed height for the button area
+
+
     
 
 MDScreen:
@@ -369,10 +439,7 @@ MDScreen:
                                     text: "Users"
 
 
-                                    MDScreen:
-                                        MDLabel:
-                                            text: "Users"
-                                            halign: "center"
+                                    UserAccounts:
 
 
                                 MDBottomNavigationItem:
