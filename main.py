@@ -515,15 +515,25 @@ class UserAccounts(Screen):
         cursor.execute("SELECT Username, Email, Birthdate, UserPassword, CreditScore, AccountType FROM UserProfiles WHERE ProfileID = %s", (self.selected_profile_id,))
         data = cursor.fetchone()
 
+        # Process the email and UserPassword data
+        if '@' not in data[1]:
+            raise ValueError("Invalid email format")
+        name, domain = data[1].split('@')
+        # Keep the first character and the last character before the @ symbol, mask the rest
+        masked_name = name[0] + "*" * (len(name) - 2) + name[-1] if len(name) > 2 else name
+        masked_email = masked_name + "@" + domain
+
+        masked_pass = "*" * (len(data[3]))
+
         # Create dialog content
         self.dialog_content = UserContent()
 
         if data:
             # Update label texts
             self.set_two_part_label_text('username', "Username", data[0])
-            self.set_two_part_label_text('email', "Email:", data[1])
+            self.set_two_part_label_text('email', "Email:", masked_email) #make obscure
             self.set_two_part_label_text('birthdate', "Birthdate:", data[2])
-            self.set_two_part_label_text('password', "User Password:", data[3])
+            self.set_two_part_label_text('password', "User Password:", masked_pass) #make it asterisk
             self.set_two_part_label_text('creditscore', "Credit Score:", data[4])
             if data[5]:
                 self.set_two_part_label_text('type', "Account Type:", data[5])
