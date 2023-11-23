@@ -218,7 +218,7 @@ class UserInbox(Screen):
         self.list_view.clear_widgets()
         scroll.add_widget(self.list_view)
         layout.add_widget(scroll)
-        
+        self.refresh_list()
         self.add_widget(layout)  # Add the layout to the screen
 
     def go_back(self, instance):
