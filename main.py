@@ -167,12 +167,11 @@ class MyLayout(Screen):
             graph_widget.padding = 5
             graph_widget.xlog = False
             graph_widget.ylog = False
-            graph_widget.tick_color = [1, 0, 0, 1]
-            graph_widget.border_color = [0, 0, 1, 1]
-            graph_widget.label_options = {'color': [0, 1, 0, 1]}
+            graph_widget.tick_color = [80/255, 196/255, 242/255, 1]
+            graph_widget.border_color = [24/255, 106/255, 232/255, 1]
+            graph_widget.label_options = {'color': [0, 0, 0, 1], 'font_name': 'MPoppins'}
             graph_widget.background_color = [1, 1, 1, 1]
             graph_widget.grid_color = [0.6, 0.6, 0.6, 1]
-
 
             # Optional: Set default range if you know the expected range of your data
             graph_widget.xmin = 738802  # Adjust these values based on your data
@@ -316,9 +315,9 @@ class MyApp(MDApp):
 
         self.screen_manager = MDScreenManager()
         # Login Screens
+        self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
         self.homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(self.homescreen_enforcer)
         

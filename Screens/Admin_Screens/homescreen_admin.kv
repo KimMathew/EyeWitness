@@ -1,9 +1,42 @@
+#: import NoTransition kivy.uix.screenmanager.NoTransition
+#: import Factory kivy.factory.Factory
+
 <DrawerClickableItem@MDNavigationDrawerItem>
     focus_color: "#80B3FF"
     text_color: "black"
     icon_color: "black"
     ripple_color: "#c5bdd2"
     selected_color: "#80B3FF"
+
+<GraphSpinner@Spinner>:
+    font_name: "MPoppins"
+    font_size: "12sp"
+    background_normal: "white"  # Override the default background
+    background_down: "white"  # Override the default background when pressed
+    background_color: 80/255, 196/255, 242/255, 1
+    option_cls: Factory.Sp  
+
+<GraphLabel@Label>:
+    font_name: "MPoppins"
+    font_size: "16sp"
+    size_hint_x: 4
+    width: self.texture_size[0] + 20
+    canvas.before:
+        Color:
+            rgba: 24/255, 106/255, 232/255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<MDSeparator@MDSeparator>
+    height: "1dp"
+    size_hint_y: None
+
+<Sp@SpinnerOption>:
+    font_name: 'MPoppins'
+    font_size: "12sp"
+    background_normal: "white"
+    background_color: 80/255, 196/255, 242/255, 1
 
 
 <MyLayout>
@@ -18,7 +51,7 @@
             size_hint_y: None  # Allow dynamic height
             height: self.minimum_height  # Set height to sum of children
             padding: 20
-            spacing: 20
+            spacing: 25
 
 
             # First statistics box
@@ -30,21 +63,14 @@
 
                 BoxLayout:
                     size_hint: (1, .15)
-                    Spinner:
+                    GraphSpinner:
                         id: first_spinner_id
                         text: "Menu"
                         values: ["1 Month", "3 Months", "6 Months", "1 Year", "All"]
                         on_text: root.first_spinner(self, self.text)
-                    Label:
+                    GraphLabel:
                         text: "Medical Emergency"
-                        size_hint_x: 4
-                        width: self.texture_size[0] + 20
-                        canvas.before:
-                            Color:
-                                rgba: 0.2, 0.7, 0.3, 1
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
+                        
                 Graph:
                     id: first_graph
                     size_hint: (1, .85)
@@ -62,6 +88,7 @@
                     xlog: False
                     ylog: False
 
+            MDSeparator:
 
             # Second statistics box
             BoxLayout:
@@ -73,21 +100,13 @@
 
                 BoxLayout:
                     size_hint: (1, .15)
-                    Spinner:
+                    GraphSpinner:
                         id: second_spinner_id
                         text: "Menu"
                         values: ["1 Month", "3 Months", "6 Months", "1 Year", "All"]
                         on_text: root.second_spinner(self, self.text)
-                    Label:
+                    GraphLabel:
                         text: "Natural Disaster"
-                        size_hint_x: 4
-                        width: self.texture_size[0] + 20
-                        canvas.before:
-                            Color:
-                                rgba: 0.2, 0.7, 0.3, 1
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
 
                 Graph:
                     id: second_graph
@@ -106,6 +125,7 @@
                     xlog: False
                     ylog: False
 
+            MDSeparator:
 
             # Third statistics box
             BoxLayout:
@@ -116,22 +136,14 @@
 
                 BoxLayout:
                     size_hint: (1, .15)
-                    Spinner:
+                    GraphSpinner:
                         id: third_spinner_id
                         text: "Menu"
                         values: ["1 Month", "3 Months", "6 Months", "1 Year", "All"]
                         on_text: root.third_spinner(self, self.text)
-                    Label:
+                    GraphLabel:
                         text: "Security Threat"
-                        size_hint_x: 4
-                        width: self.texture_size[0] + 20
-                        canvas.before:
-                            Color:
-                                rgba: 0.2, 0.7, 0.3, 1
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
-
+                        
                 Graph:
                     id: third_graph
                     size_hint: (1, .85)
@@ -149,6 +161,7 @@
                     xlog: False
                     ylog: False
 
+            MDSeparator:
 
             # Fourth statistics box
             BoxLayout:
@@ -159,21 +172,13 @@
                
                 BoxLayout:
                     size_hint: (1, .15)
-                    Spinner:
+                    GraphSpinner:
                         id: last_spinner_id
                         text: "Menu"
                         values: ["1 Month", "3 Months", "6 Months", "1 Year", "All"]
                         on_text: root.last_spinner(self, self.text)
-                    Label:
+                    GraphLabel:
                         text: "Others"
-                        size_hint_x: 4
-                        width: self.texture_size[0] + 20
-                        canvas.before:
-                            Color:
-                                rgba: 0.2, 0.7, 0.3, 1
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
                
                 Graph:
                     id: last_graph
