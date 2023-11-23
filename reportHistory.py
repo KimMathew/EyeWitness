@@ -20,7 +20,7 @@ from kivymd.uix.button import MDIconButton
 # Kivy Builder String for the custom content layout
 KV = '''
 
-<TwoPartLabel@BoxLayout>:
+<TwoPartLabel2@BoxLayout>:
     orientation: 'horizontal'
     size_hint_y: None
     padding: 1
@@ -42,7 +42,7 @@ KV = '''
         font_size: "14sp"
         
 
-<Separator@MDSeparator>:
+<Separator2@MDSeparator>:
     height: "1dp"
 
 <Button@MDRaisedButton>:
@@ -86,47 +86,47 @@ KV = '''
             padding: [0, 20, 30, 30]  # Padding: [left, top, right, bottom]
             pos_hint: {'center_x': 0.5, 'top': 1}  # Adjust pos_hint as needed
 
-            Separator:
+            Separator2:
 
-            TwoPartLabel:
+            TwoPartLabel2:
                 id: username
                 
-            Separator:
+            Separator2:
 
-            TwoPartLabel:
+            TwoPartLabel2:
                 id: title
 
-            Separator:
+            Separator2:
                 
-            TwoPartLabel:
+            TwoPartLabel2:
                 id: checklist
 
-            Separator:
+            Separator2:
             
-            TwoPartLabel:
+            TwoPartLabel2:
                 id: image_path
             
-            Separator:
+            Separator2:
                 
-            TwoPartLabel:
+            TwoPartLabel2:
                 id: details
 
-            Separator:
+            Separator2:
                 
-            TwoPartLabel:
+            TwoPartLabel2:
                 id: urgency
 
-            Separator:
+            Separator2:
             
-            TwoPartLabel:
+            TwoPartLabel2:
                 id: status
 
-            Separator:
+            Separator2:
             
-            TwoPartLabel:
+            TwoPartLabel2:
                 id: dateCreated
 
-            Separator:
+            Separator2:
 
             GridLayout:
                 cols: 2
