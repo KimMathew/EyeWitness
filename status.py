@@ -216,7 +216,7 @@ class StatusScreen(Screen):
         self.list_view = MDList()
         scroll.add_widget(self.list_view)
         layout.add_widget(scroll)
-
+        
         self.populate_list()
         self.add_widget(layout)  # Add the layout to the screen
 
