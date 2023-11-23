@@ -463,10 +463,11 @@ class MyApp(MDApp):
         self.homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(self.homescreen_enforcer)
         
-        self.screen_manager.add_widget(Builder.load_file("Screens\\Admin_Screens\\homescreen_admin.kv"))
+        self.homescreen_admin = Builder.load_file(("Screens\\Admin_Screens\\homescreen_admin.kv"))
+        self.screen_manager.add_widget(self.homescreen_admin)
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         self.homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
-        
+        self.homescreen_admin.name = 'homescreen_admin' # Assign a name to the screen
 
         # For Users
         self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\homescreen.kv"))
@@ -612,7 +613,10 @@ class MyApp(MDApp):
                     "account_type": user[6],
                     # ... Include other relevant details ...
                 }
+                # Dynamically Update the homescreen username
                 self.update_username_label()
+                self.update_username_enforcer_label() 
+                self.update_username_admin_label()
                 # Check account type and redirect accordingly
                 if self.current_user["account_type"] == "Enforcer":
                     self.screen_manager.current = 'homescreen_enforcer'
@@ -641,6 +645,22 @@ class MyApp(MDApp):
         # Ensure you have an id for your MDLabel like id: username_label
         homescreen.ids.currentUser.text = self.current_user['name']
         
+    # dynamically change the username of enforcer
+    def update_username_enforcer_label(self):
+        # Assuming 'homescreen' is the name of your screen with the username label
+        homescreenEnforcer = self.screen_manager.get_screen('homescreen_enforcer')
+        # Update the label's text with the current user's name
+        # Ensure you have an id for your MDLabel like id: username_label
+        homescreenEnforcer.ids.currentUser.text = self.current_user['name']
+    
+    # dynamically change the username of enforcer
+    def update_username_admin_label(self):
+        # Assuming 'homescreen' is the name of your screen with the username label
+        homescreenAdmin = self.screen_manager.get_screen('homescreen_admin')
+        # Update the label's text with the current user's name
+        # Ensure you have an id for your MDLabel like id: username_label
+        homescreenAdmin.ids.currentUser.text = self.current_user['name']
+
     # Reporting functions
     def show_incident_type_dropdown(self, caller):
         incident_types = ["Medical Emergency", "Natural Disaster", "Security Threat", "Others"]
