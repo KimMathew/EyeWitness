@@ -28,7 +28,7 @@
             pos: self.pos
             size: self.size
 
-<MDSeparator@MDSeparator>
+<GraphSeparator@MDSeparator>
     height: "1dp"
     size_hint_y: None
 
@@ -88,7 +88,7 @@
                     xlog: False
                     ylog: False
 
-            MDSeparator:
+            GraphSeparator:
 
             # Second statistics box
             BoxLayout:
@@ -125,7 +125,7 @@
                     xlog: False
                     ylog: False
 
-            MDSeparator:
+            GraphSeparator:
 
             # Third statistics box
             BoxLayout:
@@ -161,7 +161,7 @@
                     xlog: False
                     ylog: False
 
-            MDSeparator:
+            GraphSeparator:
 
             # Fourth statistics box
             BoxLayout:
@@ -196,194 +196,6 @@
                     padding: 5
                     xlog: False
                     ylog: False
-
-
-<TwoPartLabel@BoxLayout>:
-    orientation: 'horizontal'
-    size_hint_y: None
-    padding: 1
-
-    MDLabel:
-        id: label_prefix
-        font_name: "BPoppins"
-        halign: "left"  
-        size_hint_y: None
-        text: ""
-        font_size: "15sp"
-
-    MDLabel:
-        id: label_dynamic
-        font_name: "MPoppins"
-        halign: "center"  
-        size_hint_y: None
-        text: ""
-        font_size: "14sp"
-        
-
-<Separator@MDSeparator>:
-    height: "1dp"
-
-<Button@MDRaisedButton>:
-    size_hint: 0.66, 0.065
-    background_color: 0, 0, 0, 0
-    font_name: "BPoppins"
-    canvas.before:
-        Color:
-            rgba: 52/255, 0, 231/255, 255/255
-        RoundedRectangle:
-            size: self.size
-            pos: self.pos
-            radius: [5] 
-
-<DialogContent>:
-    orientation: "vertical"
-    size_hint_y: None
-    height: "400dp"
-
-    BoxLayout:
-        size_hint_y: None
-        height: self.minimum_height  # Adjust the height to fit the content
-        
-        MDLabel:
-            text: "Report History"
-            font_name: "BPoppins"
-            font_size: "22sp"
-            size_hint_y: None
-            height: self.texture_size[1]
-
-    ScrollView:
-        size_hint_y: None
-        height: 500  # Adjust based on your dialog box size
-
-        GridLayout:
-            cols: 1
-            size_hint_y: None
-            size_hint_x: 1  # Take full width of the ScrollView
-            height: self.minimum_height
-            spacing: "15dp"
-            padding: [0, 20, 30, 30]  # Padding: [left, top, right, bottom]
-            pos_hint: {'center_x': 0.5, 'top': 1}  # Adjust pos_hint as needed
-
-            Separator:
-
-            TwoPartLabel:
-                id: username
-                
-            Separator:
-
-            TwoPartLabel:
-                id: title
-
-            Separator:
-                
-            TwoPartLabel:
-                id: checklist
-
-            Separator:
-            
-            TwoPartLabel:
-                id: image_path
-            
-            Separator:
-                
-            TwoPartLabel:
-                id: details
-
-            Separator:
-                
-            TwoPartLabel:
-                id: urgency
-
-            Separator:
-            
-            TwoPartLabel:
-                id: status
-
-            Separator:
-            
-            TwoPartLabel:
-                id: dateCreated
-
-            Separator:
-
-            GridLayout:
-                cols: 2
-                spacing: "10sp"
-                padding: [0, 10, 0, 0]
-                size_hint_y: None
-                height: "48dp"  # Fixed height for the button area
-
-<UserContent>:
-    orientation: "vertical"
-    size_hint_y: None
-    height: "400dp"
-
-    BoxLayout:
-        size_hint_y: None
-        height: self.minimum_height  # Adjust the height to fit the content
-        
-        MDLabel:
-            text: "User Details"
-            font_name: "BPoppins"
-            font_size: "22sp"
-            size_hint_y: None
-            height: self.texture_size[1]
-
-    ScrollView:
-        size_hint_y: None
-        height: 500  # Adjust based on your dialog box size
-
-        GridLayout:
-            cols: 1
-            size_hint_y: None
-            size_hint_x: 1  # Take full width of the ScrollView
-            height: self.minimum_height
-            spacing: "15dp"
-            padding: [0, 20, 30, 30]  # Padding: [left, top, right, bottom]
-            pos_hint: {'center_x': 0.5, 'top': 1}  # Adjust pos_hint as needed
-
-            Separator:
-
-            TwoPartLabel:
-                id: username
-
-            Separator:
-                
-            TwoPartLabel:
-                id: email
-
-            Separator:
-            
-            TwoPartLabel:
-                id: birthdate
-            
-            Separator:
-                
-            TwoPartLabel:
-                id: password
-
-            Separator:
-                
-            TwoPartLabel:
-                id: creditscore
-
-            Separator:
-            
-            TwoPartLabel:
-                id: type
-
-            Separator:
-            
-
-            GridLayout:
-                cols: 2
-                spacing: "10sp"
-                padding: [0, 10, 0, 0]
-                size_hint_y: None
-                height: "48dp"  # Fixed height for the button area
-
-
-    
 
 MDScreen:
     name: "homescreen_admin"
@@ -444,7 +256,10 @@ MDScreen:
                                     text: "Users"
 
 
-                                    UserAccounts:
+                                    MDScreen:
+                                        MDLabel:
+                                            text: "Users"
+                                            halign: "center"
 
 
                                 MDBottomNavigationItem:
@@ -452,10 +267,11 @@ MDScreen:
                                     icon: "file-eye"
                                     text: "View Reports"
 
-                                    AllReportHistory:
-                                        id: all_report_history
-                                        user_id: 'some_user_id'  # Assign the user_id dynamically from your Python code
 
+                                    MDScreen:
+                                        MDLabel:
+                                            text: "Reports"
+                                            halign: "center"
                                            
             MDNavigationDrawer:
                 id: nav_drawer
@@ -469,7 +285,6 @@ MDScreen:
 
 
                     MDLabel:
-                        id:currentUser
                         text: "Username" # Change it to the name of the current user
                         font_size: "18sp"
                         font_name: "BPoppins"

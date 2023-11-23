@@ -26,11 +26,6 @@ from kivy.app import App
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 import time
-from kivymd.uix.button import MDIconButton
-from kivy.properties import ObjectProperty
-from kivymd.uix.button import MDRaisedButton
-from kivy.uix.scrollview import ScrollView
-from kivymd.uix.list import MDList, TwoLineListItem
 
 host = "sql12.freesqldatabase.com"
 user = "sql12662532"
@@ -178,6 +173,7 @@ class MyLayout(Screen):
             graph_widget.background_color = [1, 1, 1, 1]
             graph_widget.grid_color = [0.6, 0.6, 0.6, 1]
 
+
             # Optional: Set default range if you know the expected range of your data
             graph_widget.xmin = 738802  # Adjust these values based on your data
             graph_widget.xmax = 738842
@@ -310,266 +306,6 @@ class MyLayout(Screen):
     def last_spinner(self, spinner, text):
         self.update_graph('last_graph', text, 'Others')
 
-
-
-# For View Reports of Admin
-class CustomTwoLineListItem(TwoLineListItem):
-    def __init__(self, primary_font_name="BPoppins", secondary_font_name="MPoppins", primary_font_size=20, secondary_font_size=16, primary_color=[0, 0, 0, 1], secondary_color=[0, 0, 0, 1], **kwargs):
-        super().__init__(**kwargs)
-        # Override primary label properties
-        self.ids._lbl_primary.font_name = primary_font_name
-        self.ids._lbl_primary.font_size = primary_font_size 
-        self.ids._lbl_primary.color = primary_color
-
-        # Override secondary label properties
-        self.ids._lbl_secondary.font_name = secondary_font_name
-        self.ids._lbl_secondary.font_size = secondary_font_size
-        self.ids._lbl_secondary.color = secondary_color
-
-# Custom content class for the dialog
-class DialogContent(BoxLayout):
-    pass
-
-class AllReportHistory(Screen):
-    user_id = None  # Add a user_id attribute comg from main.py
-    
-    dropdown = ObjectProperty()
-    
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        # Layout for Back Button and ScrollView
-        layout = BoxLayout(orientation='vertical')
-
-        # ScrollView and List View for Reports
-        scroll = ScrollView()
-        self.list_view = MDList()
-        self.list_view.clear_widgets()
-        scroll.add_widget(self.list_view)
-        layout.add_widget(scroll)
-        
-        self.refresh_list()
-        self.add_widget(layout)  # Add the layout to the screen
-
-    def go_back(self, instance):
-        # Switch to home screen
-        self.manager.current = 'homescreen'
-    
-    def on_enter(self, *args):
-        super(AllReportHistory, self).on_enter(*args)
-        self.refresh_list()
-
-
-    def refresh_list(self):
-        self.list_view.clear_widgets()  # Clear the current list
-        self.populate_list()  # Repopulate the list with fresh data
-
-    def populate_list(self):
-        # Clear the existing list items before repopulating
-        self.list_view.clear_widgets()
-
-        # SQL query to select only reports with status not equal to 'resolved' or 'False Report'
-        cursor.execute("SELECT ReportId, Title FROM report WHERE status != 'resolved' AND status != 'False Report'")
-        rows = cursor.fetchall()
-
-        red_color = [1, 0, 0, 1]  # Red color in RGBA
-        black_color = [0, 0, 0, 1]  # Black color in RGBA
-
-        for row in rows:
-            color = red_color if row[1] == 'SOS' else black_color
-
-            item = CustomTwoLineListItem(
-                text='Report ID: ' + str(row[0]),
-                secondary_text='Title: ' + row[1],
-                primary_color=color,
-                on_release=lambda x, row=row: self.open_dialog(row)
-            )
-            self.list_view.add_widget(item)
-
-    # Method to update the text for TwoPartLabel
-    def set_two_part_label_text(self, label_id, prefix, data_text):
-        setattr(self.dialog_content.ids[label_id].ids.label_prefix, 'text', prefix)
-        setattr(self.dialog_content.ids[label_id].ids.label_dynamic, 'text', str(data_text))
-
-
-    def open_dialog(self, row):
-        self.selected_report_id = row[0]  # Store the selected ReportId
-
-        # Fetch data for the selected report
-        cursor.execute("SELECT Title, Checklist, image_Path, Details, Urgency, Status, ProfileID, dateCreated FROM report WHERE ReportId = %s", (self.selected_report_id,))
-        data = cursor.fetchone()
-
-        # Create dialog content
-        self.dialog_content = DialogContent()
-
-        if data:
-            # Update label texts
-            self.set_two_part_label_text('title', "Title:", data[0])
-            self.set_two_part_label_text('checklist', "Checklist:", data[1])
-            self.set_two_part_label_text('image_path', "Image Path:", data[2])
-            self.set_two_part_label_text('details', "Details:", data[3])
-            self.set_two_part_label_text('urgency', "Urgency:", data[4])
-            self.set_two_part_label_text('status', "Status:", data[5])
-            self.set_two_part_label_text('dateCreated', "Report Date :", data[7])
-
-
-            # Fetch username for the selected report
-            self.selected_profile_id = data[6]
-            cursor.execute("SELECT ReportId, Title FROM report WHERE status != 'resolved' AND status != 'False Report'")
-            data2 = cursor.fetchone()
-
-            if data2:
-                self.set_two_part_label_text('username', "Reported by:", str(data2[0]))
-            else:
-                self.set_two_part_label_text('username', "Reported by:", "Unknown")
-
-        self.dialog = MDDialog(type="custom",
-                            content_cls=self.dialog_content,
-                            size_hint=(0.8, None),
-                            buttons=[
-                                MDRaisedButton(
-                                    text="Close",
-                                    font_name="BPoppins",
-                                    font_size="14sp",
-                                    theme_text_color="Custom",
-                                    text_color=(1, 1, 1, 1),
-                                    md_bg_color=(76/255, 175/255, 80/255, 1),
-                                    on_release=self.dismiss_dialog
-                                )
-                            ])
-        self.dialog.open()
-        
-
-    def menu_callback(self):
-        self.dropdown.open()
-
-    # For Cancel Button
-    def dismiss_dialog(self, *args):
-        self.dialog.dismiss()
-
-
-
-# For view  users of admin
-class CustomTwoLineListItem(TwoLineListItem):
-    def __init__(self, primary_font_name="BPoppins", secondary_font_name="MPoppins", primary_font_size=20, secondary_font_size=16, primary_color=[0, 0, 0, 1], secondary_color=[0, 0, 0, 1], **kwargs):
-        super().__init__(**kwargs)
-        # Override primary label properties
-        self.ids._lbl_primary.font_name = primary_font_name
-        self.ids._lbl_primary.font_size = primary_font_size 
-        self.ids._lbl_primary.color = primary_color
-
-        # Override secondary label properties
-        self.ids._lbl_secondary.font_name = secondary_font_name
-        self.ids._lbl_secondary.font_size = secondary_font_size
-        self.ids._lbl_secondary.color = secondary_color
-
-# Custom content class for the dialog
-class UserContent(BoxLayout):
-    pass
-
-class UserAccounts(Screen):
-    
-    dropdown = ObjectProperty()
-    
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        # Layout for Back Button and ScrollView
-        layout = BoxLayout(orientation='vertical')
-        
-        # ScrollView and List View for Reports
-        scroll = ScrollView()
-        self.list_view = MDList()
-        self.list_view.clear_widgets()
-        scroll.add_widget(self.list_view)
-        layout.add_widget(scroll)
-        self.refresh_list()
-        self.add_widget(layout)  # Add the layout to the screen
-
-    def go_back(self, instance):
-        # Switch to home screen
-        self.manager.current = 'homescreen'
-    
-    def on_enter(self, *args):
-        super(UserAccounts, self).on_enter(*args)
-        self.refresh_list()
-
-
-    def refresh_list(self):
-        self.list_view.clear_widgets()  # Clear the current list
-        self.populate_list()  # Repopulate the list with fresh data
-
-    def populate_list(self):
-        # Clear the existing list items before repopulating
-        self.list_view.clear_widgets()
-
-        # SQL query to select only reports with status not equal to 'resolved' or 'False Report'
-        cursor.execute("SELECT ProfileID, UserName FROM UserProfiles")
-        rows = cursor.fetchall()
-
-
-        for row in rows:
-
-            item = CustomTwoLineListItem(
-                text='Profile ID: ' + row[0],
-                secondary_text='Username: ' + row[1],
-                on_release=lambda x, row=row: self.open_dialog(row)
-            )
-            self.list_view.add_widget(item)
-
-    # Method to update the text for TwoPartLabel
-    def set_two_part_label_text(self, label_id, prefix, data_text):
-        setattr(self.dialog_content.ids[label_id].ids.label_prefix, 'text', prefix)
-        setattr(self.dialog_content.ids[label_id].ids.label_dynamic, 'text', str(data_text))
-
-
-    def open_dialog(self, row):
-        self.selected_profile_id = row[0]  # Store the selected ReportId
-
-        # Fetch data for the selected report
-        cursor.execute("SELECT Username, Email, Birthdate, UserPassword, CreditScore, AccountType FROM UserProfiles WHERE ProfileID = %s", (self.selected_profile_id,))
-        data = cursor.fetchone()
-
-        # Create dialog content
-        self.dialog_content = UserContent()
-
-        if data:
-            # Update label texts
-            self.set_two_part_label_text('username', "Username", data[0])
-            self.set_two_part_label_text('email', "Email:", data[1])
-            self.set_two_part_label_text('birthdate', "Birthdate:", data[2])
-            self.set_two_part_label_text('password', "User Password:", data[3])
-            self.set_two_part_label_text('creditscore', "Credit Score:", data[4])
-            if data[5]:
-                self.set_two_part_label_text('type', "Account Type:", data[5])
-            else:
-                self.set_two_part_label_text('type', "Account Type:", "User")
-
-
-        self.dialog = MDDialog(type="custom",
-                            content_cls=self.dialog_content,
-                            size_hint=(0.8, None),
-                            buttons=[
-                                MDRaisedButton(
-                                    text="Close",
-                                    font_name="BPoppins",
-                                    font_size="14sp",
-                                    theme_text_color="Custom",
-                                    text_color=(1, 1, 1, 1),
-                                    md_bg_color=(76/255, 175/255, 80/255, 1),
-                                    on_release=self.dismiss_dialog
-                                )
-                            ])
-        self.dialog.open()
-        
-
-    def menu_callback(self):
-        self.dropdown.open()
-
-    # For Cancel Button
-    def dismiss_dialog(self, *args):
-        self.dialog.dismiss()
-
 class MyApp(MDApp):
     dropdown_handler = DropDownHandler()
 
@@ -586,11 +322,9 @@ class MyApp(MDApp):
         self.homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(self.homescreen_enforcer)
         
-        self.homescreen_admin = Builder.load_file(("Screens\\Admin_Screens\\homescreen_admin.kv"))
-        self.screen_manager.add_widget(self.homescreen_admin)
         self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
         self.homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
-        self.homescreen_admin.name = 'homescreen_admin' # Assign a name to the screen
+        
 
         # For Users
         self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\homescreen.kv"))
@@ -601,19 +335,10 @@ class MyApp(MDApp):
         self.screen_manager.add_widget(Builder.load_file("Screens\\Enforcer_Screens\\enforcer_report_history.kv"))
 
 
-
-        # View Reports
-        
-        
         # For Admins
+        
         admin_layout = MyLayout()
         self.screen_manager.add_widget(admin_layout)
-        
-        admin_users = UserAccounts()
-        self.screen_manager.add_widget(admin_users)
-        
-        admin_report = AllReportHistory()
-        self.screen_manager.add_widget(admin_report)
 
         return self.screen_manager
     
@@ -742,10 +467,7 @@ class MyApp(MDApp):
                     "account_type": user[6],
                     # ... Include other relevant details ...
                 }
-                # Dynamically Update the homescreen username
                 self.update_username_label()
-                self.update_username_enforcer_label() 
-                self.update_username_admin_label()
                 # Check account type and redirect accordingly
                 if self.current_user["account_type"] == "Enforcer":
                     self.screen_manager.current = 'homescreen_enforcer'
@@ -774,22 +496,6 @@ class MyApp(MDApp):
         # Ensure you have an id for your MDLabel like id: username_label
         homescreen.ids.currentUser.text = self.current_user['name']
         
-    # dynamically change the username of enforcer
-    def update_username_enforcer_label(self):
-        # Assuming 'homescreen' is the name of your screen with the username label
-        homescreenEnforcer = self.screen_manager.get_screen('homescreen_enforcer')
-        # Update the label's text with the current user's name
-        # Ensure you have an id for your MDLabel like id: username_label
-        homescreenEnforcer.ids.currentUser.text = self.current_user['name']
-    
-    # dynamically change the username of admin
-    def update_username_admin_label(self):
-        # Assuming 'homescreen' is the name of your screen with the username label
-        homescreenAdmin = self.screen_manager.get_screen('homescreen_admin')
-        # Update the label's text with the current user's name
-        # Ensure you have an id for your MDLabel like id: username_label
-        homescreenAdmin.ids.currentUser.text = self.current_user['name']
-
     # Reporting functions
     def show_incident_type_dropdown(self, caller):
         incident_types = ["Medical Emergency", "Natural Disaster", "Security Threat", "Others"]
