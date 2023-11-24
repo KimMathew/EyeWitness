@@ -569,6 +569,8 @@ class MyApp(MDApp):
     dropdown_handler = DropDownHandler()
 
     def build(self):
+        Builder.load_file("central.kv")
+
         self.success_dialog_user = SuccessDialog(self, self.transition_to_user_home)
         self.success_dialog_enforcer = SuccessDialog(self, self.transition_to_enforcer_home)
         self.data_handler = DataHandler(self)

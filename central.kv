@@ -1,0 +1,41 @@
+# Used by Enforcer and Admin
+<DrawerClickableItem@MDNavigationDrawerItem>
+    focus_color: "#80B3FF"
+    text_color: "black"
+    icon_color: "black"
+    ripple_color: "#c5bdd2"
+    selected_color: "#80B3FF"
+
+# Used by User and Enforcer
+<CustomMDCard@MDCard>
+    size_hint: None, None
+    size: "150dp", "150dp"
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+    elevation: 0.5
+    md_bg_color: [1, 1, 1, 1]
+    focus_behavior: True
+    focus_color: "#E1E0E2"
+    padding: 0, 10, 0, 20
+
+<CardButton@MDIconButton>
+    icon_size: "80sp"
+    pos_hint: {"center_x": .5}
+    
+<MDCardLabel@MDLabel>
+    halign: "center"
+    theme_text_color: "Custom"
+    text_color: "black"
+    font_name: "MPoppins"
+    font_size: "15sp"
+
+<CardBox@BoxLayout>
+    orientation: 'vertical'
+
+# Used in login, sign-up, and screenreport
+<TextF@MDTextField>
+    font_name_hint_text: "MPoppins"
+    font_name_helper_text: "MPoppins"
+    font_name: "MPoppins"
+    text_color_focus: "black"
+    line_color_focus: "black"
+    hint_text_color_focus: "black"

@@ -1,36 +1,5 @@
 #: import NoTransition kivy.uix.screenmanager.NoTransition
 
-<DrawerClickableItem@MDNavigationDrawerItem>
-    focus_color: "#80B3FF"
-    text_color: "black"
-    icon_color: "black"
-    ripple_color: "#c5bdd2"
-    selected_color: "#80B3FF"
-
-<CustomMDCard@MDCard>
-    size_hint: None, None
-    size: "150dp", "150dp"
-    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-    elevation: 0.5
-    md_bg_color: [1, 1, 1, 1]
-    focus_behavior: True
-    focus_color: "#E1E0E2"
-    padding: 0, 10, 0, 20
-
-<CardButton@MDIconButton>
-    icon_size: "80sp"
-    pos_hint: {"center_x": .5}
-    
-<MDCardLabel@MDLabel>
-    halign: "center"
-    theme_text_color: "Custom"
-    text_color: "black"
-    font_name: "MPoppins"
-    font_size: "15sp"
-
-<CardBox@BoxLayout>
-    orientation: 'vertical'
-
 MDScreen:
     name: "homescreen_enforcer"
     on_pre_enter: app.update_no_of_reports()
