@@ -366,7 +366,7 @@ class StatusScreen(Screen):
                 pass  # No unique action needed for this status
 
             # Common operation for all statuses - populate the message area
-            message = f'Report status = {self.new_status}'
+            message = f'Status: {self.new_status}'
             cursor.execute("INSERT INTO UserInbox (ProfileID, ReportID, Message) VALUES (%s, %s, %s)", 
                         (self.selected_profile_id, self.selected_report_id, message))
 
