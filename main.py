@@ -82,14 +82,15 @@ class DataHandler:
         title = screen_report.ids.title.text
         incident_type = screen_report.ids.choice1.text
         image_path = screen_report.ids.imagepath.text
+        location = screen_report.ids.location.text
         details = screen_report.ids.details.text
         urgency = screen_report.ids.urgency.text
         status = "Pending"
         date_created = datetime.now().strftime("%Y-%m-%d")
 
         cursor.execute(
-            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.app.current_user['user_id'])
+            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID, Location) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.app.current_user['user_id'], location)
         )
         db.commit()
 
@@ -97,6 +98,7 @@ class DataHandler:
         screen_report.ids.title.text = ""
         screen_report.ids.choice1.text = ""
         screen_report.ids.imagepath.text = ""
+        screen_report.ids.location.text = ""
         screen_report.ids.details.text = ""
         screen_report.ids.urgency.text = ""
     
@@ -107,14 +109,15 @@ class DataHandler:
         title = "SOS"
         incident_type = "NONE"
         image_path = "NONE"
+        location = "NONE"
         details = "NONE"
         urgency = "HIGH"
         status = "Pending"
         date_created = datetime.now().strftime("%Y-%m-%d")
         
         cursor.execute(
-            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.app.current_user['user_id'])
+            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID, Location) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.app.current_user['user_id'], location)
         )
         db.commit()
     
@@ -396,7 +399,7 @@ class AllReportHistory(Screen):
         self.selected_report_id = row[0]  # Store the selected ReportId
 
         # Fetch data for the selected report
-        cursor.execute("SELECT Title, Checklist, image_Path, Details, Urgency, Status, ProfileID, dateCreated FROM report WHERE ReportId = %s", (self.selected_report_id,))
+        cursor.execute("SELECT Title, Checklist, image_Path, Details, Urgency, Status, ProfileID, dateCreated, Location FROM report WHERE ReportId = %s", (self.selected_report_id,))
         data = cursor.fetchone()
 
         # Create dialog content
@@ -407,6 +410,10 @@ class AllReportHistory(Screen):
             self.set_two_part_label_text('title', "Title:", data[0])
             self.set_two_part_label_text('checklist', "Checklist:", data[1])
             self.set_two_part_label_text('image_path', "Image Path:", data[2])
+            if data[8]:
+                self.set_two_part_label_text('location', "Location Link:", data[8])
+            else:
+                self.set_two_part_label_text('location', "Location Link:", "Unknown")
             self.set_two_part_label_text('details', "Details:", data[3])
             self.set_two_part_label_text('urgency', "Urgency:", data[4])
             self.set_two_part_label_text('status', "Status:", data[5])

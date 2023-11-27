@@ -107,6 +107,11 @@ KV = '''
                 id: image_path
             
             Separator2:
+            
+            TwoPartLabel2:
+                id: location
+            
+            Separator2:
                 
             TwoPartLabel2:
                 id: details
@@ -128,12 +133,6 @@ KV = '''
 
             Separator2:
 
-            GridLayout:
-                cols: 2
-                spacing: "10sp"
-                padding: [0, 10, 0, 0]
-                size_hint_y: None
-                height: "48dp"  # Fixed height for the button area
 
     
 '''
@@ -249,7 +248,7 @@ class ReportHistory(Screen):
         self.selected_report_id = row[0]  # Store the selected ReportId
 
         # Fetch data for the selected report
-        cursor.execute("SELECT Title, Checklist, image_Path, Details, Urgency, Status, ProfileID, dateCreated FROM report WHERE ReportId = %s", (self.selected_report_id,))
+        cursor.execute("SELECT Title, Checklist, image_Path, Details, Urgency, Status, ProfileID, dateCreated, Location FROM report WHERE ReportId = %s", (self.selected_report_id,))
         data = cursor.fetchone()
 
         # Create dialog content
@@ -260,6 +259,10 @@ class ReportHistory(Screen):
             self.set_two_part_label_text('title', "Title:", data[0])
             self.set_two_part_label_text('checklist', "Checklist:", data[1])
             self.set_two_part_label_text('image_path', "Image Path:", data[2])
+            if data[8]:
+                self.set_two_part_label_text('location', "Location Link:", data[8])
+            else:
+                self.set_two_part_label_text('location', "Location Link:", "Unknown")
             self.set_two_part_label_text('details', "Details:", data[3])
             self.set_two_part_label_text('urgency', "Urgency:", data[4])
             self.set_two_part_label_text('status', "Status:", data[5])

@@ -27,7 +27,7 @@ MDScreen:
             spacing: "5dp"
             adaptive_height: True
             size_hint_x: 0.8
-            pos_hint: {"center_x": 0.5, "center_y": 0.55}
+            pos_hint: {"center_x": 0.5, "center_y": 0.50}
 
             TextF:
                 id: title
@@ -48,6 +48,11 @@ MDScreen:
                 # on_focus: app.filechooser_open()
             
             TextF:
+                id: location
+                hint_text: "Location"
+                helper_text: "Insert Current Location"
+
+            TextF:
                 id: details
                 hint_text: "Details"
                 helper_text: "Specify"
@@ -61,7 +66,7 @@ MDScreen:
             text: "SUBMIT"
             size_hint: 0.66, 0.065
             background_color: 0, 0, 0, 0
-            pos_hint: {"center_x": 0.5, "center_y": 0.20}
+            pos_hint: {"center_x": 0.5, "center_y": 0.10}
             font_name: "BPoppins"
             on_release:
                 app.change_screen_and_submit('homescreen')
