@@ -15,13 +15,13 @@ import random
 import string
 import mysql.connector
 from datetime import datetime, timedelta
-from status import StatusScreen  # Import the StatusScreen
-from reportHistory import ReportHistory
+from Screens.Enforcer_Screens.status import StatusScreen  # Import the StatusScreen
+from Screens.User_Screens.reportHistory import ReportHistory
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.spinner import Spinner
 from kivy_garden.graph import Graph, MeshLinePlot
-from userInbox import UserInbox
+from Screens.User_Screens.userInbox import UserInbox
 from kivy.app import App
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
