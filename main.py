@@ -458,6 +458,7 @@ class UserAccounts(Screen):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.selected_profile_id = None  # Initialize selected_profile_id
 
         # Layout for Back Button and ScrollView
         layout = BoxLayout(orientation='vertical')
@@ -557,10 +558,43 @@ class UserAccounts(Screen):
                             ])
         self.dialog.open()
         
+        self.dialog_content = UserContent()
+        
+        menu_items = [
+            {"viewclass": "OneLineListItem", "text": "User"},
+            {"viewclass": "OneLineListItem", "text": "Admin"},
+            {"viewclass": "OneLineListItem", "text": "Enforcer"}
+        ]
 
-    def menu_callback(self):
+        self.dropdown = MDDropdownMenu(
+            caller=self.dialog_content.ids.button1,
+            items=menu_items,
+            width_mult=4
+        )
+
+        for item in menu_items:
+            item['on_release'] = lambda x=item['text']: self.option_callback(x)
+        
+
         self.dropdown.open()
+        
+            
+    def option_callback(self, option_text):
+        self.new_status = option_text
+        profileID = self.selected_profile_id
+        self.new_status = option_text  # Update self.new_status with the selected option
+        self.dialog_content.ids.button1.text = option_text  # Update the button text
+        print(option_text)
+        print(profileID)
+        self.dropdown.dismiss()
 
+        cursor.execute("UPDATE UserProfiles SET AccountType = %s WHERE ProfileID = %s", 
+                    (self.new_status, profileID ))
+
+        db.commit()
+        self.dropdown.dismiss()
+        self.refresh_list()
+    
     # For Cancel Button
     def dismiss_dialog(self, *args):
         self.dialog.dismiss()
@@ -600,14 +634,16 @@ class MyApp(MDApp):
         admin_layout = MyLayout()
         self.screen_manager.add_widget(admin_layout)
         
-        admin_users = UserAccounts()
-        self.screen_manager.add_widget(admin_users)
+        self.admin_users = UserAccounts()
+        self.screen_manager.add_widget(self.admin_users)
         
         admin_report = AllReportHistory()
         self.screen_manager.add_widget(admin_report)
 
         return self.screen_manager
     
+    def menu_user(self):
+        self.admin_users.open_dialog()
     
     # Used to dynamically update the number of reports
     def update_no_of_reports(self):
