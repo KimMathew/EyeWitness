@@ -734,8 +734,10 @@ class MyApp(MDApp):
             # If strptime raises a ValueError, it means the format is incorrect
             toast("Invalid birthday format. Please use MM/DD/YYYY.")
             return
-        # Set default account type
+        # Set default account type and credit score
         account_type = "User"
+        default_credit_score = 100
+
         
         # If all validations pass, proceed with creating a user ID and formatting the birthdate
         user_id = self.generate_user_id()
@@ -748,9 +750,9 @@ class MyApp(MDApp):
         try:
             # Insert the new user's data into the database
             cursor.execute(
-                "INSERT INTO UserProfiles (ProfileID, UserName, Email, Birthdate, UserPassword, AccountType) "
-                "VALUES (%s, %s, %s, %s, %s, %s)",
-                (user_id, name, email, formatted_birthdate, password, account_type)
+                "INSERT INTO UserProfiles (ProfileID, UserName, Email, Birthdate, UserPassword, AccountType, CreditScore) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                (user_id, name, email, formatted_birthdate, password, account_type, default_credit_score)
             )
             conn.commit()
             # Inform the user of successful signup and navigate to the login screen
