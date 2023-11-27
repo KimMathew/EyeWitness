@@ -31,6 +31,7 @@ from kivy.properties import ObjectProperty
 from kivymd.uix.button import MDRaisedButton
 from kivy.uix.scrollview import ScrollView
 from kivymd.uix.list import MDList, TwoLineListItem
+from kivymd.uix.button import MDFlatButton
 
 host = "sql12.freesqldatabase.com"
 user = "sql12662532"
@@ -432,7 +433,7 @@ class AllReportHistory(Screen):
                                     font_size="14sp",
                                     theme_text_color="Custom",
                                     text_color=(1, 1, 1, 1),
-                                    md_bg_color=(76/255, 175/255, 80/255, 1),
+                                    md_bg_color=(24/255, 106/255, 232/255, 1),
                                     on_release=self.dismiss_dialog
                                 )
                             ])
@@ -546,23 +547,22 @@ class UserAccounts(Screen):
                             content_cls=self.dialog_content,
                             size_hint=(0.8, None),
                             buttons=[
+                                MDFlatButton(
+                                    text="Close",
+                                    font_name="BPoppins",
+                                    font_size="14sp",
+                                    theme_text_color="Custom",
+                                    text_color=(0, 0, 0, 1),
+                                    on_release=self.dismiss_dialog
+                                ),
                                 MDRaisedButton(
                                     text="Select Acount Type",
                                     font_name="BPoppins",
                                     font_size="14sp",
                                     theme_text_color="Custom",
                                     text_color=(1, 1, 1, 1),
-                                    md_bg_color=(76/255, 175/255, 80/255, 1),
+                                    md_bg_color=(24/255, 106/255, 232/255, 1),
                                     on_release=self.menu_callback  # Provide a reference to the method
-                                ),
-                                MDRaisedButton(
-                                    text="Close",
-                                    font_name="BPoppins",
-                                    font_size="14sp",
-                                    theme_text_color="Custom",
-                                    text_color=(1, 1, 1, 1),
-                                    md_bg_color=(76/255, 175/255, 80/255, 1),
-                                    on_release=self.dismiss_dialog
                                 )
                             ])
         self.dialog.open()

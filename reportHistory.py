@@ -286,7 +286,7 @@ class ReportHistory(Screen):
                                     font_size="14sp",
                                     theme_text_color="Custom",
                                     text_color=(1, 1, 1, 1),
-                                    md_bg_color=(76/255, 175/255, 80/255, 1),
+                                    md_bg_color=(24/255, 106/255, 232/255, 1),
                                     on_release=self.dismiss_dialog
                                 )
                             ])
