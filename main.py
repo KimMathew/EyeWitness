@@ -547,6 +547,15 @@ class UserAccounts(Screen):
                             size_hint=(0.8, None),
                             buttons=[
                                 MDRaisedButton(
+                                    text="Select Acount Type",
+                                    font_name="BPoppins",
+                                    font_size="14sp",
+                                    theme_text_color="Custom",
+                                    text_color=(1, 1, 1, 1),
+                                    md_bg_color=(76/255, 175/255, 80/255, 1),
+                                    on_release=self.menu_callback  # Provide a reference to the method
+                                ),
+                                MDRaisedButton(
                                     text="Close",
                                     font_name="BPoppins",
                                     font_size="14sp",
@@ -557,9 +566,9 @@ class UserAccounts(Screen):
                                 )
                             ])
         self.dialog.open()
+
         
-        self.dialog_content = UserContent()
-        
+    def create_dropdown_menu(self, button_instance):
         menu_items = [
             {"viewclass": "OneLineListItem", "text": "User"},
             {"viewclass": "OneLineListItem", "text": "Admin"},
@@ -567,26 +576,26 @@ class UserAccounts(Screen):
         ]
 
         self.dropdown = MDDropdownMenu(
-            caller=self.dialog_content.ids.button1,
+            caller=button_instance,  # Use the button instance as the caller
             items=menu_items,
             width_mult=4
         )
 
         for item in menu_items:
             item['on_release'] = lambda x=item['text']: self.option_callback(x)
-        
 
+    def menu_callback(self, button_instance):
+        self.create_dropdown_menu(button_instance)
         self.dropdown.open()
-        
-            
+
+
+
     def option_callback(self, option_text):
         self.new_status = option_text
         profileID = self.selected_profile_id
         self.new_status = option_text  # Update self.new_status with the selected option
-        self.dialog_content.ids.button1.text = option_text  # Update the button text
         print(option_text)
         print(profileID)
-        self.dropdown.dismiss()
 
         cursor.execute("UPDATE UserProfiles SET AccountType = %s WHERE ProfileID = %s", 
                     (self.new_status, profileID ))
@@ -594,6 +603,7 @@ class UserAccounts(Screen):
         db.commit()
         self.dropdown.dismiss()
         self.refresh_list()
+        self.dismiss_dialog()
     
     # For Cancel Button
     def dismiss_dialog(self, *args):
@@ -641,9 +651,7 @@ class MyApp(MDApp):
         self.screen_manager.add_widget(admin_report)
 
         return self.screen_manager
-    
-    def menu_user(self):
-        self.admin_users.open_dialog()
+
     
     # Used to dynamically update the number of reports
     def update_no_of_reports(self):
