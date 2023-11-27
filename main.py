@@ -744,6 +744,7 @@ class MyApp(MDApp):
          # Database connection and cursor setup
         conn = self.get_db_connection()
         cursor = conn.cursor()
+
         try:
             # Insert the new user's data into the database
             cursor.execute(
@@ -761,6 +762,13 @@ class MyApp(MDApp):
         finally:
             cursor.close()
             conn.close()
+
+        # Clear the text fields
+        signup_screen = self.screen_manager.get_screen('signup')  # Adjust 'signup_screen' with your actual signup screen name
+        signup_screen.ids.name_input.text = ""
+        signup_screen.ids.email_input.text = ""
+        signup_screen.ids.password_input.text = ""
+        signup_screen.ids.birthday_input.text = ""           
 
     def on_login(self, email, password):
         conn = self.get_db_connection()
@@ -788,6 +796,11 @@ class MyApp(MDApp):
                 else:
                     self.screen_manager.current = 'homescreen'
                 toast(f"Login successful! Welcome, {self.current_user['name']}.")
+
+                # Clear the text fields
+                login_screen = self.screen_manager.get_screen('login')  
+                login_screen.ids.email_input.text = ""
+                login_screen.ids.password_input.text = ""
 
                 # call credit score function
                 self.display_credit_score_image(self.current_user['user_id'])
