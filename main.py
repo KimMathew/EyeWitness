@@ -30,6 +30,7 @@ from kivymd.uix.list import MDList, TwoLineListItem
 from kivymd.uix.button import MDFlatButton
 from Screens.Enforcer_Screens.status import StatusScreen  # Import the StatusScreen
 from Screens.User_Screens.reportHistory import ReportHistory
+from Screens.User_Screens.creditScore import CreditScore
 from Screens.Admin_Screens.admin_screen import StatsLayout, AllReportHistory, UserAccounts
 from database.database import DatabaseManager
 
@@ -143,7 +144,7 @@ class SuccessDialog:
 
     # def transition_to_home(self, dt):
         # self.root.current = self.transition_screen
-
+        
 class MyApp(MDApp):
     dropdown_handler = DropDownHandler()
     
@@ -171,6 +172,8 @@ class MyApp(MDApp):
         # For Users
         self.screen_manager.add_widget(Builder.load_file("Screens/User_Screens/homescreen.kv"))
         self.screen_manager.add_widget(Builder.load_file("Screens/User_Screens/screenreport.kv"))
+        self.creditScore = CreditScore(self.screen_manager)
+
         
     
 
@@ -340,8 +343,8 @@ class MyApp(MDApp):
                 login_screen.ids.email_input.text = ""
                 login_screen.ids.password_input.text = ""
 
-                # call credit score function
-                self.display_credit_score_image(self.current_user['user_id'])
+                
+                self.creditScore.display_credit_score_image(self.current_user['user_id'], self.screen_manager)
             else:
                 toast("User not found or incorrect password!")
         except mysql.connector.Error as err:
@@ -420,64 +423,7 @@ class MyApp(MDApp):
         if self.status_screen:
             self.status_screen.menu_callback()
 
-    def get_credit_score_color(self, score):
-        if score >= 81:
-            return (0, 128/255, 55/255, 1)  # Green for excellent scores
-        elif score >= 61:
-            return (126/255, 217/255, 87/255, 1)  # Darker green for good scores
-        elif score >= 41:
-            return (237/255, 183/255, 0, 1)  # Yellow for fair scores
-        elif score >= 21:
-            return (255/255, 118/255, 67/255, 1)  # Orange for poor scores
-        else:
-            return (231/255, 0, 51/255, 1)  # Red for very poor scores
 
-    # Displaying Credit score
-    def display_credit_score_image(self, user_id):
-        # Fetch the user's credit score from the database
-        print(f"Hello {user_id}!")
-        conn = self.get_db_connection()
-        cursor = conn.cursor()
-        try:
-            cursor.execute("SELECT CreditScore FROM UserProfiles WHERE ProfileID = %s", (user_id,))
-            result = cursor.fetchone()
-            if result:
-                credit_score = result[0]
-            else:
-                print(f"No credit score found for user_id: {user_id}")
-                return
-        except mysql.connector.Error as err:
-            print(f"Database error: {err}")
-            return
-        finally:
-            cursor.close()
-            conn.close()
-
-        # Determine the appropriate image path based on the credit score
-        if 81 <= credit_score:
-            selected_image_path = 'Screens/Assets/Excellent.png'
-        elif 61 <= credit_score <= 80:
-            selected_image_path = 'Screens/Assets/Good.png'
-        elif 41 <= credit_score <= 60:
-            selected_image_path = 'Screens/Assets/Fair.png'
-        elif 21 <= credit_score <= 40:
-            selected_image_path = 'Screens/Assets/Poor.png'
-        elif 1 <= credit_score <= 20:
-            selected_image_path = 'Screens/Assets/VeryPoor.png'
-        else:
-            selected_image_path = 'Screens/Assets/Fair.png'  # Provide a default image for unexpected cases
-
-        # Add the image to the BoxLayout with id 'image_container'
-        homescreen = self.screen_manager.get_screen('homescreen')
-        image_container = homescreen.ids.image_container
-        credit_score_label = homescreen.ids.credit_score_label  # Get the label object
-        # Determine the color based on the credit score
-        credit_score_color = self.get_credit_score_color(credit_score)
-        credit_score_label.color = credit_score_color
-
-        image_container.clear_widgets()
-        image_container.add_widget(Image(source=selected_image_path))
-        credit_score_label.text = f"Trustiness: {credit_score}"  # Update the label's text
 
 if __name__ == "__main__":
     LabelBase.register(name="MPoppins", fn_regular="Screens/Assets/Poppins/Poppins-Medium.ttf")
