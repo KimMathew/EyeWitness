@@ -16,6 +16,7 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivy.uix.label import Label
 from kivy.properties import ObjectProperty
 from kivymd.uix.button import MDIconButton
+from database.database import DatabaseManager
 
 # Kivy Builder String for the custom content layout
 KV = '''
@@ -81,18 +82,9 @@ class CustomTwoLineListItem(TwoLineListItem):
 class DialogContent(BoxLayout):
     pass
 
-host = "sql12.freesqldatabase.com"
-user = "sql12662532"
-password = "viDRIhzYSq"
-database = "sql12662532"
-
-db = mysql.connector.connect(
-    host = "sql12.freesqldatabase.com",
-    user = "sql12662532",
-    password = "viDRIhzYSq",
-    database = "sql12662532",
-    )
-
+# Database initialization
+database = DatabaseManager()
+db = database.get_my_db()
 cursor = db.cursor()
 
 class UserInbox(Screen):

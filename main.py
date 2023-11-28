@@ -31,21 +31,15 @@ from kivymd.uix.button import MDFlatButton
 from Screens.Enforcer_Screens.status import StatusScreen  # Import the StatusScreen
 from Screens.User_Screens.reportHistory import ReportHistory
 from Screens.Admin_Screens.admin_screen import StatsLayout, AllReportHistory, UserAccounts
+from database.database import DatabaseManager
 
 
-host = "sql12.freesqldatabase.com"
-user = "sql12662532"
-password = "viDRIhzYSq"
-database = "sql12662532"
 
-db = mysql.connector.connect(
-    host = "sql12.freesqldatabase.com",
-    user = "sql12662532",
-    password = "viDRIhzYSq",
-    database = "sql12662532",
-    )
-
+# Database initialization
+database = DatabaseManager()
+db = database.get_my_db()
 cursor = db.cursor()
+
 Window.size = (360, 600)
 
 class DropDownHandler:
@@ -152,6 +146,7 @@ class SuccessDialog:
 
 class MyApp(MDApp):
     dropdown_handler = DropDownHandler()
+    
 
     def build(self):
         Builder.load_file("central.kv")

@@ -30,19 +30,12 @@ from kivymd.uix.button import MDRaisedButton
 from kivy.uix.scrollview import ScrollView
 from kivymd.uix.list import MDList, TwoLineListItem
 from kivymd.uix.button import MDFlatButton
+from database.database import DatabaseManager
 
-host = "sql12.freesqldatabase.com"
-user = "sql12662532"
-password = "viDRIhzYSq"
-database = "sql12662532"
 
-db = mysql.connector.connect(
-    host = "sql12.freesqldatabase.com",
-    user = "sql12662532",
-    password = "viDRIhzYSq",
-    database = "sql12662532",
-    )
-
+# Database initialization
+database = DatabaseManager()
+db = database.get_my_db()
 cursor = db.cursor()
 
 #Displaying Statistics
