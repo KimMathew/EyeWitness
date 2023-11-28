@@ -191,8 +191,6 @@ db = mysql.connector.connect(
 
 cursor = db.cursor()
 
-Window.size = (360, 600)
-
 class StatusScreen(Screen):
     
     dropdown = ObjectProperty()

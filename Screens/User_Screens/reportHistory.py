@@ -168,8 +168,6 @@ db = mysql.connector.connect(
 
 cursor = db.cursor()
 
-Window.size = (360, 600)
-
 class ReportHistory(Screen):
     user_id = None  # Add a user_id attribute comg from main.py
     
