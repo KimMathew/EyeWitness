@@ -628,20 +628,20 @@ class MyApp(MDApp):
 
         self.screen_manager = MDScreenManager()
         # Login Screens
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\main.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\login.kv"))
-        self.homescreen_enforcer = Builder.load_file("Screens\\Enforcer_Screens\\homescreen_enforcer.kv") # Load the screen from KV file and assign a name
+        self.screen_manager.add_widget(Builder.load_file("Screens/LoginScreen/main.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens/LoginScreen/login.kv"))
+        self.homescreen_enforcer = Builder.load_file("Screens/Enforcer_Screens/homescreen_enforcer.kv") # Load the screen from KV file and assign a name
         self.screen_manager.add_widget(self.homescreen_enforcer)
         
-        self.screen_manager.add_widget(Builder.load_file("Screens\\LoginScreen\\signup.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens/LoginScreen/signup.kv"))
         self.homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
         
 
-        self.homescreen_admin = Builder.load_file(("Screens\\Admin_Screens\\homescreen_admin.kv"))
+        self.homescreen_admin = Builder.load_file(("Screens/Admin_Screens/homescreen_admin.kv"))
         self.screen_manager.add_widget(self.homescreen_admin)
         # For Users
-        self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\homescreen.kv"))
-        self.screen_manager.add_widget(Builder.load_file("Screens\\User_Screens\\screenreport.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens/User_Screens/homescreen.kv"))
+        self.screen_manager.add_widget(Builder.load_file("Screens/User_Screens/screenreport.kv"))
         
     
 
@@ -926,17 +926,17 @@ class MyApp(MDApp):
 
         # Determine the appropriate image path based on the credit score
         if 81 <= credit_score:
-            selected_image_path = 'Screens\\Assets\\Excellent.png'
+            selected_image_path = 'Screens/Assets/Excellent.png'
         elif 61 <= credit_score <= 80:
-            selected_image_path = 'Screens\\Assets\\Good.png'
+            selected_image_path = 'Screens/Assets/Good.png'
         elif 41 <= credit_score <= 60:
-            selected_image_path = 'Screens\\Assets\\Fair.png'
+            selected_image_path = 'Screens/Assets/Fair.png'
         elif 21 <= credit_score <= 40:
-            selected_image_path = 'Screens\\Assets\\Poor.png'
+            selected_image_path = 'Screens/Assets/Poor.png'
         elif 1 <= credit_score <= 20:
-            selected_image_path = 'Screens\\Assets\\VeryPoor.png'
+            selected_image_path = 'Screens/Assets/VeryPoor.png'
         else:
-            selected_image_path = 'Screens\\Assets\\Fair.png'  # Provide a default image for unexpected cases
+            selected_image_path = 'Screens/Assets/Fair.png'  # Provide a default image for unexpected cases
 
         # Add the image to the BoxLayout with id 'image_container'
         homescreen = self.screen_manager.get_screen('homescreen')
@@ -951,7 +951,7 @@ class MyApp(MDApp):
         credit_score_label.text = f"Trustiness: {credit_score}"  # Update the label's text
 
 if __name__ == "__main__":
-    LabelBase.register(name="MPoppins", fn_regular="Screens\\Assets\\Poppins\\Poppins-Medium.ttf")
-    LabelBase.register(name="BPoppins", fn_regular="Screens\\Assets\\Poppins\\Poppins-SemiBold.ttf")
+    LabelBase.register(name="MPoppins", fn_regular="Screens/Assets/Poppins/Poppins-Medium.ttf")
+    LabelBase.register(name="BPoppins", fn_regular="Screens/Assets/Poppins/Poppins-SemiBold.ttf")
 
     MyApp().run()

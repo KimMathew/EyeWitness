@@ -57,7 +57,7 @@ MDScreen:
                                     size_hint_y: 0.7
 
                                     Image:
-                                        source: "Screens\\Assets\\Good.png"
+                                        source: "Screens/Assets/Good.png"
                                     
                                 MDLabel:
                                     id: credit_score_label
@@ -81,7 +81,7 @@ MDScreen:
                                     CardBox: 
                                         
                                         CardButton:
-                                            icon: "Screens\\Assets\\report.png"
+                                            icon: "Screens/Assets/report.png"
                                             on_press:
                                                 root.manager.transition = NoTransition()
                                                 root.manager.current = "screenreport"
@@ -94,7 +94,7 @@ MDScreen:
                                     CardBox:
                                         
                                         CardButton:
-                                            icon: "Screens\\Assets\\sos.png"
+                                            icon: "Screens/Assets/sos.png"
                                             on_press:
                                                 app.submitSos()
                                                 app.show_user_success_dialog('homescreen')
@@ -107,7 +107,7 @@ MDScreen:
                                     CardBox:
 
                                         CardButton:
-                                            icon: "Screens\\Assets\\history.png"
+                                            icon: "Screens/Assets/history.png"
                                             on_press: 
                                                 root.manager.transition = NoTransition()
                                                 app.add_user_report_history_screen()
