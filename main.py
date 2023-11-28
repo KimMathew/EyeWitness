@@ -234,14 +234,6 @@ class MyApp(MDApp):
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for i in range(10))
 
-    def get_db_connection(self):
-        return mysql.connector.connect(
-            host="sql12.freesqldatabase.com",
-            user="sql12662532",
-            password="viDRIhzYSq",
-            database="sql12662532"
-        )
-
     def convert_date_format(self, date_string):
         try:
             date_object = datetime.strptime(date_string, '%m/%d/%Y')
@@ -282,8 +274,8 @@ class MyApp(MDApp):
         user_id = self.generate_user_id()
         formatted_birthdate = datetime.strptime(birthdate, '%m/%d/%Y').date()
 
-         # Database connection and cursor setup
-        conn = self.get_db_connection()
+        # Database connection and cursor setup
+        conn = db
         cursor = conn.cursor()
 
         try:
@@ -312,7 +304,7 @@ class MyApp(MDApp):
         signup_screen.ids.birthday_input.text = ""           
 
     def on_login(self, email, password):
-        conn = self.get_db_connection()
+        conn = db
         cursor = conn.cursor(buffered=True)
         try:
             cursor.execute("SELECT * FROM UserProfiles WHERE Email = %s AND UserPassword = %s", (email, password))
