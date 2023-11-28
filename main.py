@@ -46,6 +46,7 @@ db = mysql.connector.connect(
     )
 
 cursor = db.cursor()
+Window.size = (360, 600)
 
 class DropDownHandler:
     def show_custom_dropdown(self, caller, items):
