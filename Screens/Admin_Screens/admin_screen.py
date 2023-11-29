@@ -53,10 +53,6 @@ class StatsLayout(Screen):
             graph_widget = self.ids[graph_name]
             graph_widget.xlabel = 'Date'
             graph_widget.ylabel = 'Value'
-            graph_widget.x_ticks_minor = 5
-            graph_widget.x_ticks_major = 10
-            graph_widget.y_ticks_minor = 1
-            graph_widget.y_ticks_major = 5
             graph_widget.x_grid = True
             graph_widget.y_grid = True
             graph_widget.x_grid_label = True
@@ -72,8 +68,8 @@ class StatsLayout(Screen):
 
 
             # Optional: Set default range if you know the expected range of your data
-            graph_widget.xmin = 738802  # Adjust these values based on your data
-            graph_widget.xmax = 738842
+            graph_widget.xmin = 738812  # Adjust these values based on your data
+            graph_widget.xmax = 738852
             graph_widget.ymin = 0
             graph_widget.ymax = 15
 
@@ -194,14 +190,94 @@ class StatsLayout(Screen):
     def first_spinner(self, spinner, text):
         self.update_graph('first_graph', text, 'Medical Emergency')
 
+        end_date = datetime.today()
+        if text == "1 Month":
+            start_date = end_date - timedelta(days=30)
+        elif text == "3 Months":
+            start_date = end_date - timedelta(days=90)
+        elif text == "6 Months":
+            start_date = end_date - timedelta(days=180)
+        elif text == "1 Year":
+            start_date = end_date - timedelta(days=365)
+        elif text == "All":
+            # Assuming 'All' means a significantly large range
+            start_date = datetime(2000, 1, 1)
+        else:
+            # Default case if none match
+            start_date = end_date
+
+        self.update_graph_range('first_graph', start_date, end_date)
+
     def second_spinner(self, spinner, text):
         self.update_graph('second_graph', text, 'Natural Disaster')
+
+        end_date = datetime.today()
+        if text == "1 Month":
+            start_date = end_date - timedelta(days=30)
+        elif text == "3 Months":
+            start_date = end_date - timedelta(days=90)
+        elif text == "6 Months":
+            start_date = end_date - timedelta(days=180)
+        elif text == "1 Year":
+            start_date = end_date - timedelta(days=365)
+        elif text == "All":
+            # Assuming 'All' means a significantly large range
+            start_date = datetime(2000, 1, 1)
+        else:
+            # Default case if none match
+            start_date = end_date
+
+        self.update_graph_range('second_graph', start_date, end_date)
 
     def third_spinner(self, spinner, text):
         self.update_graph('third_graph', text, 'Security Threat')
 
+        end_date = datetime.today()
+        if text == "1 Month":
+            start_date = end_date - timedelta(days=30)
+        elif text == "3 Months":
+            start_date = end_date - timedelta(days=90)
+        elif text == "6 Months":
+            start_date = end_date - timedelta(days=180)
+        elif text == "1 Year":
+            start_date = end_date - timedelta(days=365)
+        elif text == "All":
+            # Assuming 'All' means a significantly large range
+            start_date = datetime(2000, 1, 1)
+        else:
+            # Default case if none match
+            start_date = end_date
+
+        self.update_graph_range('third_graph', start_date, end_date)
+
     def last_spinner(self, spinner, text):
         self.update_graph('last_graph', text, 'Others')
+
+        end_date = datetime.today()
+        if text == "1 Month":
+            start_date = end_date - timedelta(days=30)
+        elif text == "3 Months":
+            start_date = end_date - timedelta(days=90)
+        elif text == "6 Months":
+            start_date = end_date - timedelta(days=180)
+        elif text == "1 Year":
+            start_date = end_date - timedelta(days=365)
+        elif text == "All":
+            # Assuming 'All' means a significantly large range
+            start_date = datetime(2000, 1, 1)
+        else:
+            # Default case if none match
+            start_date = end_date
+
+        self.update_graph_range('last_graph', start_date, end_date)
+
+    def update_graph_range(self, graph_id, start_date, end_date):
+        # Get the graph widget by id
+        graph_widget = self.ids[graph_id]
+
+        # Convert dates to ordinal and set as xmin and xmax
+        graph_widget.xmin = start_date.toordinal()
+        graph_widget.xmax = end_date.toordinal()
 
 # For View Reports of Admin
 class CustomTwoLineListItem(TwoLineListItem):
