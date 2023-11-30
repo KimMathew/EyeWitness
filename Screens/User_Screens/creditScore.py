@@ -18,7 +18,7 @@ class CreditScore():
         # Fetch the user's credit score from the database
         print(f"Hello {user_id}!")
         try:
-            cursor.execute("SELECT CreditScore FROM UserProfiles WHERE ProfileID = %s", (user_id,))
+            cursor.execute("SELECT CreditScore FROM UserProfile WHERE ProfileID = %s", (user_id,))
             result = cursor.fetchone()
             if result:
                 credit_score = result[0]
