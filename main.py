@@ -281,7 +281,7 @@ class MyApp(MDApp):
         try:
             # Insert the new user's data into the database
             cursor.execute(
-                "INSERT INTO UserProfiles (ProfileID, UserName, Email, Birthdate, UserPassword, AccountType, CreditScore) "
+                "INSERT INTO UserProfile (ProfileID, UserName, Email, Birthdate, UserPassword, AccountType, CreditScore) "
                 "VALUES (%s, %s, %s, %s, %s, %s, %s)",
                 (user_id, name, email, formatted_birthdate, password, account_type, default_credit_score)
             )
@@ -307,7 +307,7 @@ class MyApp(MDApp):
         conn = db
         cursor = conn.cursor(buffered=True)
         try:
-            cursor.execute("SELECT * FROM UserProfiles WHERE Email = %s AND UserPassword = %s", (email, password))
+            cursor.execute("SELECT * FROM UserProfile WHERE Email = %s AND UserPassword = %s", (email, password))
             user = cursor.fetchone()
             if user:
                 # Store user information

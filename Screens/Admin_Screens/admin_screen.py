@@ -113,10 +113,10 @@ class StatsLayout(Screen):
         cursor = None  # Initialize cursor here
         try:
             conn = mysql.connector.connect(
-                host="sql12.freesqldatabase.com",
-                user="sql12662532",
-                passwd="viDRIhzYSq",
-                database="sql12662532"
+                host = "sql12.freesqldatabase.com",
+                user = "sql12666408",
+                password = "LyqraRUgFf",
+                database = "sql12666408"
             )
             cursor = conn.cursor()
 
@@ -386,7 +386,7 @@ class UserAccounts(Screen):
         self.list_view.clear_widgets()
 
         # SQL query to select only reports with status not equal to 'resolved' or 'False Report'
-        cursor.execute("SELECT ProfileID, UserName FROM UserProfiles")
+        cursor.execute("SELECT ProfileID, UserName FROM UserProfile")
         rows = cursor.fetchall()
 
 
@@ -409,7 +409,7 @@ class UserAccounts(Screen):
         self.selected_profile_id = row[0]  # Store the selected ReportId
 
         # Fetch data for the selected report
-        cursor.execute("SELECT Username, Email, Birthdate, UserPassword, CreditScore, AccountType FROM UserProfiles WHERE ProfileID = %s", (self.selected_profile_id,))
+        cursor.execute("SELECT Username, Email, Birthdate, UserPassword, CreditScore, AccountType FROM UserProfile WHERE ProfileID = %s", (self.selected_profile_id,))
         data = cursor.fetchone()
 
         # Process the email and UserPassword data
@@ -492,7 +492,7 @@ class UserAccounts(Screen):
         print(option_text)
         print(profileID)
 
-        cursor.execute("UPDATE UserProfiles SET AccountType = %s WHERE ProfileID = %s", 
+        cursor.execute("UPDATE UserProfile SET AccountType = %s WHERE ProfileID = %s", 
                     (self.new_status, profileID ))
 
         db.commit()

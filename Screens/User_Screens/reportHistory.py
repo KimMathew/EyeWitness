@@ -261,7 +261,7 @@ class ReportHistory(Screen):
 
             # Fetch username for the selected report
             self.selected_profile_id = data[6]
-            cursor.execute("SELECT Username FROM UserProfiles WHERE ProfileID = %s", (self.selected_profile_id,))
+            cursor.execute("SELECT Username FROM UserProfile WHERE ProfileID = %s", (self.selected_profile_id,))
             data2 = cursor.fetchone()
 
             if data2:

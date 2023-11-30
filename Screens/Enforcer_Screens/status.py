@@ -274,7 +274,7 @@ class StatusScreen(Screen):
 
             # Fetch username for the selected report
             self.selected_profile_id = data[6]
-            cursor.execute("SELECT Username FROM UserProfiles WHERE ProfileID = %s", (self.selected_profile_id,))
+            cursor.execute("SELECT Username FROM UserProfile WHERE ProfileID = %s", (self.selected_profile_id,))
             data2 = cursor.fetchone()
 
             if data2:
@@ -349,7 +349,7 @@ class StatusScreen(Screen):
 
             elif self.new_status == "On the Process":
                 # Add 5 to the CreditScore for the retrieved ProfileID
-                cursor.execute("UPDATE UserProfiles SET CreditScore = CreditScore + 5 WHERE ProfileID = %s", 
+                cursor.execute("UPDATE UserProfile SET CreditScore = CreditScore + 5 WHERE ProfileID = %s", 
                             (profile_id,))
 
             elif self.new_status == "Resolved":
@@ -388,7 +388,7 @@ class StatusScreen(Screen):
             profile_id = data[0]
 
             # Deduct 10 from the CreditScore
-            cursor.execute("UPDATE UserProfiles SET CreditScore = CreditScore - 10 WHERE ProfileId = %s", (profile_id,))
+            cursor.execute("UPDATE UserProfile SET CreditScore = CreditScore - 10 WHERE ProfileId = %s", (profile_id,))
 
             # Commit the changes to the database
             db.commit()
