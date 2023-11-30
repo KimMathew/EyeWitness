@@ -68,51 +68,56 @@ class DataHandler:
         self.app = app
 
     def submit_data(self, screen_name):
-        screen_report = self.app.root.get_screen(screen_name)
+        with self.app.database.get_connection() as conn:
+            cursor = conn.cursor()
+            screen_report = self.app.root.get_screen(screen_name)
 
-        reportInitial = random.randint(10, 999)
-        reportID = str(reportInitial)
-        title = screen_report.ids.title.text
-        incident_type = screen_report.ids.choice1.text
-        image_path = screen_report.ids.imagepath.text
-        location = screen_report.ids.location.text
-        details = screen_report.ids.details.text
-        urgency = screen_report.ids.urgency.text
-        status = "Pending"
-        date_created = datetime.now().strftime("%Y-%m-%d")
+            reportInitial = random.randint(10, 999)
+            reportID = str(reportInitial)
+            title = screen_report.ids.title.text
+            incident_type = screen_report.ids.choice1.text
+            image_path = screen_report.ids.imagepath.text
+            location = screen_report.ids.location.text
+            details = screen_report.ids.details.text
+            urgency = screen_report.ids.urgency.text
+            status = "Pending"
+            date_created = datetime.now().strftime("%Y-%m-%d")
 
-        cursor.execute(
-            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID, Location) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.app.current_user['user_id'], location)
-        )
-        db.commit()
+            cursor.execute(
+                "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID, Location) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.app.current_user['user_id'], location)
+            )
+            conn.commit()
 
-        # Clear the text fields
-        screen_report.ids.title.text = ""
-        screen_report.ids.choice1.text = ""
-        screen_report.ids.imagepath.text = ""
-        screen_report.ids.location.text = ""
-        screen_report.ids.details.text = ""
-        screen_report.ids.urgency.text = ""
-    
+            # Clear the text fields
+            screen_report.ids.title.text = ""
+            screen_report.ids.choice1.text = ""
+            screen_report.ids.imagepath.text = ""
+            screen_report.ids.location.text = ""
+            screen_report.ids.details.text = ""
+            screen_report.ids.urgency.text = ""
+        
     def submit_sos(self):
-        
-        reportInitial = random.randint(10, 999)
-        reportID = str(reportInitial)
-        title = "SOS"
-        incident_type = "NONE"
-        image_path = "NONE"
-        location = "NONE"
-        details = "NONE"
-        urgency = "HIGH"
-        status = "Pending"
-        date_created = datetime.now().strftime("%Y-%m-%d")
-        
-        cursor.execute(
-            "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID, Location) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.app.current_user['user_id'], location)
-        )
-        db.commit()
+        def __init__(self, app):
+            self.app = app
+        with self.app.database.get_connection() as conn:
+            cursor = conn.cursor()
+            reportInitial = random.randint(10, 999)
+            reportID = str(reportInitial)
+            title = "SOS"
+            incident_type = "NONE"
+            image_path = "NONE"
+            location = "NONE"
+            details = "NONE"
+            urgency = "HIGH"
+            status = "Pending"
+            date_created = datetime.now().strftime("%Y-%m-%d")
+            
+            cursor.execute(
+                "INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status, dateCreated, ProfileID, Location) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (reportID, title, incident_type, image_path, details, urgency, status, date_created,self.app.current_user['user_id'], location)
+            )
+            conn.commit()
     
 class SuccessDialog:
     def __init__(self, app, transition_function):
@@ -148,6 +153,7 @@ class MyApp(MDApp):
     
     def build(self):
         Builder.load_file("central.kv")
+        self.database = DatabaseManager()
 
         self.success_dialog_user = SuccessDialog(self, self.transition_to_user_home)
         self.success_dialog_enforcer = SuccessDialog(self, self.transition_to_enforcer_home)
@@ -179,19 +185,23 @@ class MyApp(MDApp):
         
         admin_report = AllReportHistory()
         self.screen_manager.add_widget(admin_report)
+        
+        
 
         return self.screen_manager
 
     # Used to dynamically update the number of reports
     def update_no_of_reports(self):
-        # Execute the query
-        query = "SELECT COUNT(*) FROM report WHERE status != 'resolved' AND status != 'False Report'"
-        cursor.execute(query)
-        
-        # Fetch the result
-        result = cursor.fetchone()
-        self.report_count = int(result[0]) if result else 0  # Use 'report_count' consistently
-        self.homescreen_enforcer.ids.reportNum.text = str(self.report_count)
+        with self.database.get_connection() as conn:
+            cursor = conn.cursor()
+            # Execute the query
+            query = "SELECT COUNT(*) FROM report WHERE status != 'resolved' AND status != 'False Report'"
+            cursor.execute(query)
+            
+            # Fetch the result
+            result = cursor.fetchone()
+            self.report_count = int(result[0]) if result else 0  # Use 'report_count' consistently
+            self.homescreen_enforcer.ids.reportNum.text = str(self.report_count)
 
 
     # Used to transition screen coming from other py file(status update of enforcer)

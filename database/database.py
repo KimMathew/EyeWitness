@@ -12,3 +12,6 @@ class DatabaseManager:
     def get_my_db(self):
         return self._db
     
+    def get_connection(self):
+        # Add your connection details here
+        return mysql.connector.connect(user="sql12662532", password="viDRIhzYSq", host="sql12.freesqldatabase.com", database="sql12662532")

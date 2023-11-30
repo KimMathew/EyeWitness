@@ -355,7 +355,7 @@ class StatusScreen(Screen):
             elif self.new_status == "Resolved":
                 pass  # No unique action needed for this status
 
-            # Common operation for all statuses - populate the message area
+            # Notify the user about the status of their report
             message = f'Status: {self.new_status}'
             cursor.execute("INSERT INTO UserInbox (ProfileID, ReportID, Message) VALUES (%s, %s, %s)", 
                         (self.selected_profile_id, self.selected_report_id, message))
@@ -375,10 +375,10 @@ class StatusScreen(Screen):
 
     
     def falseReport(self):
-        new_status = "False Report"
+        self.new_status = "False Report"
 
         # Update the report status
-        cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (new_status, self.selected_report_id))
+        cursor.execute("UPDATE report SET status = %s WHERE ReportId = %s", (self.new_status, self.selected_report_id))
 
         # Retrieve ProfileID from the report
         cursor.execute("SELECT ProfileID FROM report WHERE ReportId = %s", (self.selected_report_id,))
@@ -390,6 +390,11 @@ class StatusScreen(Screen):
             # Deduct 10 from the CreditScore
             cursor.execute("UPDATE UserProfiles SET CreditScore = CreditScore - 10 WHERE ProfileId = %s", (profile_id,))
 
+            # Notify the user about the status of their report
+            message = f'Status: {self.new_status}'
+            cursor.execute("INSERT INTO UserInbox (ProfileID, ReportID, Message) VALUES (%s, %s, %s)", 
+                        (self.selected_profile_id, self.selected_report_id, message))
+            
             # Commit the changes to the database
             db.commit()
 
