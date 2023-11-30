@@ -34,17 +34,17 @@ class CreditScore():
 
         # Determine the appropriate image path based on the credit score
         if 81 <= credit_score:
-            selected_image_path = 'Screens/Assets/Excellent.png'
+            selected_image_path = 'Assets/Excellent.png'
         elif 61 <= credit_score <= 80:
-            selected_image_path = 'Screens/Assets/Good.png'
+            selected_image_path = 'Assets/Good.png'
         elif 41 <= credit_score <= 60:
-            selected_image_path = 'Screens/Assets/Fair.png'
+            selected_image_path = 'Assets/Fair.png'
         elif 21 <= credit_score <= 40:
-            selected_image_path = 'Screens/Assets/Poor.png'
+            selected_image_path = 'Assets/Poor.png'
         elif 1 <= credit_score <= 20:
-            selected_image_path = 'Screens/Assets/VeryPoor.png'
+            selected_image_path = 'Assets/VeryPoor.png'
         else:
-            selected_image_path = 'Screens/Assets/Fair.png'  # Provide a default image for unexpected cases
+            selected_image_path = 'Assets/Fair.png'  # Provide a default image for unexpected cases
 
         # Add the image to the BoxLayout with id 'image_container'
         homescreen = self.screen_manager.get_screen('homescreen')

@@ -34,8 +34,6 @@ from Screens.User_Screens.creditScore import CreditScore
 from Screens.Admin_Screens.admin_screen import StatsLayout, AllReportHistory, UserAccounts
 from database.database import DatabaseManager
 
-
-
 # Database initialization
 database = DatabaseManager()
 db = database.get_my_db()
@@ -148,7 +146,6 @@ class SuccessDialog:
 class MyApp(MDApp):
     dropdown_handler = DropDownHandler()
     
-
     def build(self):
         Builder.load_file("central.kv")
 
@@ -165,7 +162,6 @@ class MyApp(MDApp):
         
         self.screen_manager.add_widget(Builder.load_file("Screens/LoginScreen/signup.kv"))
         self.homescreen_enforcer.name = 'homescreen_enforcer' # Assign a name to the screen
-        
 
         self.homescreen_admin = Builder.load_file(("Screens/Admin_Screens/homescreen_admin.kv"))
         self.screen_manager.add_widget(self.homescreen_admin)
@@ -174,11 +170,6 @@ class MyApp(MDApp):
         self.screen_manager.add_widget(Builder.load_file("Screens/User_Screens/screenreport.kv"))
         self.creditScore = CreditScore(self.screen_manager)
 
-        
-    
-
-        
-        
         # For Admins
         admin_stats = StatsLayout()
         self.screen_manager.add_widget(admin_stats)
@@ -191,7 +182,6 @@ class MyApp(MDApp):
 
         return self.screen_manager
 
-    
     # Used to dynamically update the number of reports
     def update_no_of_reports(self):
         # Execute the query
@@ -415,10 +405,8 @@ class MyApp(MDApp):
         if self.status_screen:
             self.status_screen.menu_callback()
 
-
-
 if __name__ == "__main__":
-    LabelBase.register(name="MPoppins", fn_regular="Screens/Assets/Poppins/Poppins-Medium.ttf")
-    LabelBase.register(name="BPoppins", fn_regular="Screens/Assets/Poppins/Poppins-SemiBold.ttf")
+    LabelBase.register(name="MPoppins", fn_regular="Assets/Poppins/Poppins-Medium.ttf")
+    LabelBase.register(name="BPoppins", fn_regular="Assets/Poppins/Poppins-SemiBold.ttf")
 
     MyApp().run()
