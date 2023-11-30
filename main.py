@@ -234,6 +234,14 @@ class MyApp(MDApp):
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for i in range(10))
 
+    def get_db_connection(self):
+        return mysql.connector.connect(
+            host = "sql12.freesqldatabase.com",
+            user = "sql12666408",
+            password = "LyqraRUgFf",
+            database = "sql12666408",
+        )
+
     def convert_date_format(self, date_string):
         try:
             date_object = datetime.strptime(date_string, '%m/%d/%Y')
@@ -274,8 +282,8 @@ class MyApp(MDApp):
         user_id = self.generate_user_id()
         formatted_birthdate = datetime.strptime(birthdate, '%m/%d/%Y').date()
 
-        # Database connection and cursor setup
-        conn = db
+         # Database connection and cursor setup
+        conn = self.get_db_connection()
         cursor = conn.cursor()
 
         try:
@@ -304,7 +312,7 @@ class MyApp(MDApp):
         signup_screen.ids.birthday_input.text = ""           
 
     def on_login(self, email, password):
-        conn = db
+        conn = self.get_db_connection()
         cursor = conn.cursor(buffered=True)
         try:
             cursor.execute("SELECT * FROM UserProfile WHERE Email = %s AND UserPassword = %s", (email, password))
@@ -315,7 +323,7 @@ class MyApp(MDApp):
                     "user_id": user[0],  # Assuming ProfileID is the first column
                     "name": user[1],     # Adjust indices based on your table structure
                     "email": user[2],
-                    "account_type": user[6],
+                    "account_type": user[5],
                     # ... Include other relevant details ...
                 }
                 self.update_username_label()
@@ -335,7 +343,7 @@ class MyApp(MDApp):
                 login_screen.ids.email_input.text = ""
                 login_screen.ids.password_input.text = ""
 
-                
+                # call credit score function
                 self.creditScore.display_credit_score_image(self.current_user['user_id'], self.screen_manager)
             else:
                 toast("User not found or incorrect password!")
