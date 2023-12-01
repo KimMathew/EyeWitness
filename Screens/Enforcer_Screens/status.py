@@ -180,7 +180,7 @@ class DialogContent(BoxLayout):
 
 # Database initialization
 database = DatabaseManager()
-db = database.get_my_db()
+db = database.get_connection()
 cursor = db.cursor()
 
 class StatusScreen(Screen):
@@ -249,63 +249,82 @@ class StatusScreen(Screen):
 
 
     def open_dialog(self, row):
-        self.selected_report_id = row[0]  # Store the selected ReportId
+        data = []
+        conn = None
+        cursor = None  # Declare cursor here
+        try:
+            conn = DatabaseManager.get_connection(self)
+            cursor = conn.cursor(buffered=True)  # Use buffered cursor
+            self.selected_report_id = row[0]
 
-        # Fetch data for the selected report
-        cursor.execute("SELECT Title, Checklist, image_Path, Details, Urgency, Status, ProfileID, dateCreated, Location FROM report WHERE ReportId = %s", (self.selected_report_id,))
-        data = cursor.fetchone()
+            # Fetch data for the selected report, including the username from UserProfiles
+            query = """SELECT r.Title, r.Checklist, r.image_Path, r.Details, r.Urgency, r.Status, 
+                            r.ProfileID, r.dateCreated, r.Location, u.Username
+                    FROM report r
+                    LEFT JOIN UserProfile u ON r.ProfileID = u.ProfileID
+                    WHERE r.ReportId = %s"""
+            cursor.execute(query, (self.selected_report_id,))
+            data = cursor.fetchone()
 
-        # Create dialog content
-        self.dialog_content = DialogContent()
+            # Create dialog content
+            self.dialog_content = DialogContent()
 
-        if data:
-            # Update label texts
-            self.set_two_part_label_text('title', "Title:", data[0])
-            self.set_two_part_label_text('checklist', "Checklist:", data[1])
-            self.set_two_part_label_text('image_path', "Image Path:", data[2])
-            if data[8]:
-                self.set_two_part_label_text('location', "Location Link:", data[8])
-            else:
-                self.set_two_part_label_text('location', "Location Link:", "Unknown")
-            self.set_two_part_label_text('details', "Details:", data[3])
-            self.set_two_part_label_text('urgency', "Urgency:", data[4])
-            self.set_two_part_label_text('status', "Status:", data[5])
-            self.set_two_part_label_text('dateCreated', "Report Date :", data[7])
+            if data:
+                # Extract ProfileID from the fetched data
+                self.selected_profile_id = data[6]
+                # Update label texts
+                self.set_two_part_label_text('title', "Title:", data[0])
+                self.set_two_part_label_text('checklist', "Checklist:", data[1])
+                self.set_two_part_label_text('image_path', "Image Path:", data[2])
+                self.set_two_part_label_text('location', "Location Link:", data[8] or "Unknown")
+                self.set_two_part_label_text('details', "Details:", data[3])
+                self.set_two_part_label_text('urgency', "Urgency:", data[4])
+                self.set_two_part_label_text('status', "Status:", data[5])
+                self.set_two_part_label_text('dateCreated', "Report Date:", data[7])
+                self.set_two_part_label_text('username', "Reported by:", data[9] or "Unknown")
 
-            # Fetch username for the selected report
-            self.selected_profile_id = data[6]
-            cursor.execute("SELECT Username FROM UserProfile WHERE ProfileID = %s", (self.selected_profile_id,))
-            data2 = cursor.fetchone()
+            self.dialog = MDDialog(type="custom",
+                                content_cls=self.dialog_content,
+                                size_hint=(0.8, None),
+                                buttons=[
+                                    MDFlatButton(
+                                        text="Close",
+                                        font_name="BPoppins",
+                                        font_size="14sp",
+                                        theme_text_color="Custom",
+                                        text_color=(0, 0, 0, 1),
+                                        on_release=self.dismiss_dialog
+                                    ),
+                                    MDRaisedButton(
+                                        text="Submit",
+                                        font_name="BPoppins",
+                                        font_size="14sp",
+                                        theme_text_color="Custom",
+                                        text_color=(1, 1, 1, 1),
+                                        md_bg_color=(24/255, 106/255, 232/255, 1),
+                                        on_release=self.submit_data
+                                    )
+                                ])
+            
+            # Check if there was an error fetching data, and if not, open the dialog
+            if not data:
+                raise Exception("Data not found")  # You can raise a custom exception
 
-            if data2:
-                self.set_two_part_label_text('username', "Reported by:", str(data2[0]))
-            else:
-                self.set_two_part_label_text('username', "Reported by:", "Unknown")
+            self.dialog.open()
+            self.create_dropdown_menu()
 
-        self.dialog = MDDialog(type="custom",
-                            content_cls=self.dialog_content,
-                            size_hint=(0.8, None),
-                            buttons=[
-                                MDFlatButton(
-                                    text="Close",
-                                    font_name="BPoppins",
-                                    font_size="14sp",
-                                    theme_text_color="Custom",
-                                    text_color=(0, 0, 0, 1),
-                                    on_release=self.dismiss_dialog
-                                ),
-                                MDRaisedButton(
-                                    text="Submit",
-                                    font_name="BPoppins",
-                                    font_size="14sp",
-                                    theme_text_color="Custom",
-                                    text_color=(1, 1, 1, 1),
-                                    md_bg_color=(24/255, 106/255, 232/255, 1),
-                                    on_release=self.submit_data
-                                )
-                            ])
-        self.dialog.open()
-        self.create_dropdown_menu()
+        except mysql.connector.Error as e:
+            print(f"Error fetching data from db: {e}")
+            # Handle the error here, e.g., display an error message to the user
+
+        except Exception as e:
+            print(f"Error: {e}")
+
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
         
     def create_dropdown_menu(self):
         menu_items = [

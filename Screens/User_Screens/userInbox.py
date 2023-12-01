@@ -84,7 +84,7 @@ class DialogContent(BoxLayout):
 
 # Database initialization
 database = DatabaseManager()
-db = database.get_my_db()
+db = database.get_connection()
 cursor = db.cursor()
 
 class UserInbox(Screen):

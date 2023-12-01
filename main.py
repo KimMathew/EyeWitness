@@ -36,7 +36,7 @@ from database.database import DatabaseManager
 
 # Database initialization
 database = DatabaseManager()
-db = database.get_my_db()
+db = database.get_connection()
 cursor = db.cursor()
 
 Window.size = (360, 600)
@@ -323,7 +323,7 @@ class MyApp(MDApp):
                     "user_id": user[0],  # Assuming ProfileID is the first column
                     "name": user[1],     # Adjust indices based on your table structure
                     "email": user[2],
-                    "account_type": user[5],
+                    "account_type": user[6],
                     # ... Include other relevant details ...
                 }
                 self.update_username_label()
