@@ -47,7 +47,7 @@ class DropDownHandler:
         self.dropdown_menu = MDDropdownMenu(
             caller=caller,
             items=menu_items,
-            position="bottom",
+            position="auto",
             width_mult=4,
         )
         self.dropdown_menu.open()
