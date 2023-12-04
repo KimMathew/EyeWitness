@@ -14,6 +14,6 @@ A Python and Kivy-built app for streamlined incident reporting.
 - <a href="https://github.com/angelobaricante"> Baricante, Mark Angelo R. </a> <br>
 - <a href="https://github.com/KimMathew"> Bautista, Kim Mathew C. </a> <br>
 - <a href="https://github.com/GianEzekiel"> Gersaniba, Gian Ezekiel S. </a> <br>
-- <a href=""> Hernandez, Boris G. </a>
+- <a href="https://github.com/borisher"> Hernandez, Boris G. </a>
 - <a href="https://github.com/reinierAdrianLuna"> Luna, Reinier Adrian R.  </a> 
 
