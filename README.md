@@ -9,3 +9,4 @@ A Python and Kivy-built app for streamlined incident reporting.
 - 'pip install kivy[base]'
 - 'pip install mysql-connector-python'
 - 'pip install kivy-garden'
+- `pip install kivy[base]`
